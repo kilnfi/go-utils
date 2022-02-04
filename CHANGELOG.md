@@ -11,3 +11,7 @@
 - Add CSV store to manipulate data in CSV files
 
 ### 🛠 Bug fixes
+
+### Others
+
+- [CI-CD] Add automated CI workflow running unit test
