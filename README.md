@@ -25,3 +25,5 @@ Go-Utils is a library containing a collection of Golang utilities
     | Use go context for timeout and cancellation                              | Yes       |
     | Use core [protolambda/zrnt](https://github.com/protolambda/zrnt) types   | Yes      |
     | Provides tracing for requests                                            | Not Yet   |
+
+- A collection of Ethereum 1.0 & 2.0 flags compatible with [Cobra](https://github.com/spf13/cobra) library to build CLI applications that need to interact with blockchain nodes
