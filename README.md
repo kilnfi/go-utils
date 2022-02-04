@@ -27,3 +27,5 @@ Go-Utils is a library containing a collection of Golang utilities
     | Provides tracing for requests                                            | Not Yet   |
 
 - A collection of Ethereum 1.0 & 2.0 flags compatible with [Cobra](https://github.com/spf13/cobra) library to build CLI applications that need to interact with blockchain nodes
+
+- Helpers to manipulate data into CSV files
