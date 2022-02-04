@@ -7,6 +7,7 @@ require (
 	github.com/ethereum/go-ethereum v1.10.15
 	github.com/golang/mock v1.6.0
 	github.com/protolambda/zrnt v0.25.0
+	github.com/spf13/pflag v1.0.3
 	github.com/stretchr/testify v1.7.0
 	gopkg.in/h2non/gock.v1 v1.1.2
 )
