@@ -78,9 +78,10 @@ func (c *Client) HeaderByNumber(ctx context.Context, blockNumber *big.Int) (*get
 
 // CallContract executes contract call
 // The block number can be nil, in which case call is executed at the latest block.
+//nolint:gocritic
 func (c *Client) CallContract(ctx context.Context, msg geth.CallMsg, blockNumber *big.Int) ([]byte, error) {
 	res := new(gethhexutil.Bytes)
-	err := c.call(ctx, res, "eth_call", toCallArg(msg), eth1.ToBlockNumArg(blockNumber))
+	err := c.call(ctx, res, "eth_call", toCallArg(&msg), eth1.ToBlockNumArg(blockNumber))
 	if err != nil {
 		return nil, err
 	}
@@ -148,9 +149,10 @@ func (c *Client) SuggestGasTipCap(ctx context.Context) (*big.Int, error) {
 
 // EstimateGas tries to estimate the gas needed to execute a specific transaction based on
 // the current pending state of the chain.
+//nolint:gocritic
 func (c *Client) EstimateGas(ctx context.Context, msg geth.CallMsg) (uint64, error) {
 	res := new(gethhexutil.Uint64)
-	err := c.call(ctx, res, "eth_estimateGas", toCallArg(msg))
+	err := c.call(ctx, res, "eth_estimateGas", toCallArg(&msg))
 	if err != nil {
 		return 0, err
 	}
@@ -181,11 +183,11 @@ func (c *Client) FilterLogs(ctx context.Context, q geth.FilterQuery) ([]gethtype
 }
 
 // SubscribeFilterLogs subscribes to the results of a streaming filter query.
-func (ec *Client) SubscribeFilterLogs(ctx context.Context, _ geth.FilterQuery, _ chan<- gethtypes.Log) (geth.Subscription, error) {
+func (c *Client) SubscribeFilterLogs(ctx context.Context, _ geth.FilterQuery, _ chan<- gethtypes.Log) (geth.Subscription, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func toCallArg(msg geth.CallMsg) interface{} {
+func toCallArg(msg *geth.CallMsg) interface{} {
 	arg := map[string]interface{}{
 		"from": msg.From,
 		"to":   msg.To,

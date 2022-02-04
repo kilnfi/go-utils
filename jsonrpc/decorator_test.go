@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 
 	"github.com/skillz-blockchain/go-utils/jsonrpc"
 	jsonrpctestutils "github.com/skillz-blockchain/go-utils/jsonrpc/testutils"
@@ -21,7 +22,8 @@ func TestWithVersion(t *testing.T) {
 		gomock.Any(),
 		jsonrpctestutils.HasVersion("2.0"),
 		gomock.Any())
-	c.Call(context.Background(), &jsonrpc.Request{}, nil)
+	err := c.Call(context.Background(), &jsonrpc.Request{}, nil)
+	require.NoError(t, err)
 }
 
 func TestWithIncrementalID(t *testing.T) {
@@ -35,11 +37,13 @@ func TestWithIncrementalID(t *testing.T) {
 		gomock.Any(),
 		jsonrpctestutils.HasID(uint32(0)),
 		gomock.Any())
-	c.Call(context.Background(), &jsonrpc.Request{}, nil)
+	err := c.Call(context.Background(), &jsonrpc.Request{}, nil)
+	require.NoError(t, err)
 
 	mockCli.EXPECT().Call(
 		gomock.Any(),
 		jsonrpctestutils.HasID(uint32(1)),
 		gomock.Any())
-	c.Call(context.Background(), &jsonrpc.Request{}, nil)
+	err = c.Call(context.Background(), &jsonrpc.Request{}, nil)
+	require.NoError(t, err)
 }

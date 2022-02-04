@@ -74,39 +74,4 @@ func (val *Validator) UnmarshalCSV(record []string) error {
 	})
 
 	return json.Unmarshal(b, val)
-	// idx, err := strconv.ParseInt(record[0], 10, 64)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// val.Index = beaconcommon.ValidatorIndex(idx)
-	// val.Status = record[1]
-
-	// balance, err := strconv.ParseInt(record[2], 10, 64)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// val.Balance = beaconcommon.Gwei(balance)
-
-	// val.Validator.Pubkey.UnmarshalText([]byte(record[3]))
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// val.Validator.WithdrawalCredentials.UnmarshalText([]byte(record[4]))
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// effBalance, err := strconv.ParseInt(record[5], 10, 64)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// val.Validator.EffectiveBalance = beaconcommon.Gwei(effBalance)
-
-	// val.Validator.Slashed, err = strconv.ParseBool(record[6])
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// return val, nil
 }

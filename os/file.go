@@ -18,7 +18,7 @@ func CopyFile(sourcePath, destPath string) error {
 	}
 	defer source.Close()
 
-	err = os.MkdirAll(filepath.Dir(destPath), 0700)
+	err = os.MkdirAll(filepath.Dir(destPath), 0o700)
 	if err != nil {
 		return err
 	}

@@ -65,7 +65,7 @@ func newCallRequest(ctx context.Context, req *jsonrpc.Request) (*http.Request, e
 }
 
 func newRequest(ctx context.Context) *http.Request {
-	req, _ := http.NewRequestWithContext(ctx, "", "", nil)
+	req, _ := http.NewRequestWithContext(ctx, "", "", http.NoBody)
 	return req
 }
 
@@ -79,14 +79,14 @@ type responseMsg struct {
 
 func inspectCallResponseMsg(msg *responseMsg, res interface{}) error {
 	if msg.Error == nil && msg.Result == nil {
-		return fmt.Errorf("Invalid JSON-RPC response missing both result and error")
+		return fmt.Errorf("invalid JSON-RPC response missing both result and error")
 	}
 
 	if msg.Error != nil {
 		errMsg := new(jsonrpc.ErrorMsg)
 		err := json.Unmarshal(*msg.Error, errMsg)
 		if err != nil {
-			return fmt.Errorf("Invalid JSON-RPC error message %v", string(*msg.Error))
+			return fmt.Errorf("invalid JSON-RPC error message %v", string(*msg.Error))
 		}
 		return errMsg
 	}
@@ -94,7 +94,7 @@ func inspectCallResponseMsg(msg *responseMsg, res interface{}) error {
 	if msg.Result != nil && res != nil {
 		err := json.Unmarshal(*msg.Result, res)
 		if err != nil {
-			return fmt.Errorf("Failed to unmarshal JSON-RPC result %v into %T (%v)", string(*msg.Result), res, err)
+			return fmt.Errorf("failed to unmarshal JSON-RPC result %v into %T (%v)", string(*msg.Result), res, err)
 		}
 		return nil
 	}

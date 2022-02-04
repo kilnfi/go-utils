@@ -26,3 +26,18 @@ jobs:
       - name: 'Run unit tests and generage HTML coverage report'
         run: |
           make test-and-generate-coverage-html
+  lint:
+      name: 'Linting tests'
+      runs-on: ubuntu-18.04
+      steps:
+        - name: 'Setup go ${{ env.GO_VERSION }}'
+          uses: actions/setup-go@v1
+          with:
+            go-version: ${{ env.GO_VERSION }}
+        - name: 'Check out project files'
+          uses: actions/checkout@v2
+          with:
+            submodules: false
+        - name: 'Run linting checks'
+          run: |
+            make test-lint
