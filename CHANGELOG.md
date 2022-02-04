@@ -4,4 +4,6 @@
 
 ### 🆕 Features
 
+- Add JSON-RPC client to connect to any JSON-RPC server over HTTP
+
 ### 🛠 Bug fixes
