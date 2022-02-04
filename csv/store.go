@@ -138,12 +138,12 @@ func openFile(path string, createIfNotExist bool) (*os.File, error) {
 		}
 
 		// file does not exist so we create it
-		err = os.MkdirAll(filepath.Dir(path), 0700)
+		err = os.MkdirAll(filepath.Dir(path), 0o700)
 		if err == nil {
 			return os.Create(path)
 		}
 	} else {
-		return os.OpenFile(path, os.O_APPEND|os.O_RDWR, 0644)
+		return os.OpenFile(path, os.O_APPEND|os.O_RDWR, 0o644)
 	}
 
 	return nil, err

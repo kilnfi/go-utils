@@ -30,7 +30,7 @@ func NewClientFromAddress(addr string) *Client {
 }
 
 func newRequest(ctx context.Context) *http.Request {
-	req, _ := http.NewRequestWithContext(ctx, "", "", nil)
+	req, _ := http.NewRequestWithContext(ctx, "", "", http.NoBody)
 	return req
 }
 

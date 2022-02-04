@@ -13,7 +13,7 @@ func TestBlockNumber(t *testing.T) {
 		b := big.NewInt(0)
 		flags := pflag.NewFlagSet("test", pflag.PanicOnError)
 		BlockNumberVar(flags, &b, "test-block", nil, "Test usage")
-		flags.Parse([]string{})
+		_ = flags.Parse([]string{})
 		assert.Nil(t, b)
 	})
 
@@ -21,7 +21,7 @@ func TestBlockNumber(t *testing.T) {
 		b := big.NewInt(0)
 		flags := pflag.NewFlagSet("test", pflag.PanicOnError)
 		BlockNumberVar(flags, &b, "test-block", nil, "Test usage")
-		flags.Parse([]string{"--test-block", "0x1"})
+		_ = flags.Parse([]string{"--test-block", "0x1"})
 		assert.Equal(t, big.NewInt(1), b)
 	})
 
@@ -29,7 +29,7 @@ func TestBlockNumber(t *testing.T) {
 		b := big.NewInt(0)
 		flags := pflag.NewFlagSet("test", pflag.PanicOnError)
 		BlockNumberVar(flags, &b, "test-block", nil, "Test usage")
-		flags.Parse([]string{"--test-block", "0x1"})
+		_ = flags.Parse([]string{"--test-block", "0x1"})
 		assert.Equal(t, big.NewInt(1), b)
 	})
 }

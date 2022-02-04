@@ -27,7 +27,8 @@ func WithBaseURL(baseURL string) autorest.PrepareDecorator {
 				if u.RawQuery != "" {
 					// handle unencoded semicolons (ideally the server would send them already encoded)
 					u.RawQuery = strings.Replace(u.RawQuery, ";", "%3B", -1)
-					q, err := url.ParseQuery(u.RawQuery)
+					var q url.Values
+					q, err = url.ParseQuery(u.RawQuery)
 					if err != nil {
 						return r, err
 					}

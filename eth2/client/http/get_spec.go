@@ -36,6 +36,8 @@ func newGetSpecRequest(ctx context.Context) (*http.Request, error) {
 }
 
 // spec is an intermediary type allowing to properly unmarshal beacon config/spec responses
+
+//nolint:revive,stylecheck // use uppercase as per protolambda/zrnt package
 type spec struct {
 	beaconcommon.Spec
 	BASE_REWARD_FACTOR                         uint64 `json:"BASE_REWARD_FACTOR,string"`

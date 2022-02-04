@@ -34,7 +34,7 @@ Expects either a decimal or an hex encoded value with 0x prefix`,
 		"value",
 		"v",
 		big.NewInt(0),
-		`Optional funds to transfer along the transaction in Wei, if not set then no funds are transfered
+		`Optional funds to transfer along the transaction in Wei, if not set then no funds are transferred
 Expects either a decimal or an hex encoded value with 0x prefix`,
 	)
 	BigIntVarP(

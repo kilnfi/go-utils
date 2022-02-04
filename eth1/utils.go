@@ -7,12 +7,17 @@ import (
 	gethhexutil "github.com/ethereum/go-ethereum/common/hexutil"
 )
 
+const (
+	pending = "pending"
+	latest  = "latest"
+)
+
 // FromBlockNumArg decodes a string into a big.Int block number
 func FromBlockNumArg(s string) (*big.Int, error) {
 	switch {
-	case s == "pending":
+	case s == pending:
 		return big.NewInt(-1), nil
-	case s == "latest":
+	case s == latest:
 		return nil, nil
 	default:
 		b, err := DecodeBig(s)
@@ -27,9 +32,9 @@ func FromBlockNumArg(s string) (*big.Int, error) {
 func ToBlockNumArg(number *big.Int) string {
 	switch {
 	case number == nil:
-		return "latest"
+		return latest
 	case number.Cmp(big.NewInt(-1)) == 0:
-		return "pending"
+		return pending
 	default:
 		return EncodeBig(number)
 	}
