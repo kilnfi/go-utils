@@ -6,6 +6,7 @@ require (
 	github.com/Azure/go-autorest/autorest v0.11.24
 	github.com/ethereum/go-ethereum v1.10.15
 	github.com/golang/mock v1.6.0
+	github.com/herumi/bls-eth-go-binary v0.0.0-20220216073600-600054663ec1
 	github.com/protolambda/zrnt v0.25.0
 	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/pflag v1.0.3
