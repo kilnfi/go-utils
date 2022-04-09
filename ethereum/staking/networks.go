@@ -1,0 +1,12 @@
+package staking
+
+import (
+	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
+)
+
+var Networks = map[string]beaconcommon.Version{
+	"mainnet":  {0x00, 0x00, 0x00, 0x00},
+	"prater":   {0x00, 0x00, 0x10, 0x20},
+	"kintsugi": {0x60, 0x00, 0x10, 0x69},
+	"kiln":     {0x70, 0x00, 0x00, 0x69},
+}
