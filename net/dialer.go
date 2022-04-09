@@ -4,21 +4,21 @@ import (
 	"net"
 	"time"
 
-	"github.com/skillz-blockchain/go-utils/common"
+	kilntypes "github.com/skillz-blockchain/go-utils/common/types"
 )
 
 type DialerConfig struct {
-	Timeout   *common.Duration
-	KeepAlive *common.Duration
+	Timeout   *kilntypes.Duration
+	KeepAlive *kilntypes.Duration
 }
 
 func (cfg *DialerConfig) SetDefault() *DialerConfig {
 	if cfg.Timeout == nil {
-		cfg.Timeout = &common.Duration{Duration: 30 * time.Second}
+		cfg.Timeout = &kilntypes.Duration{Duration: 30 * time.Second}
 	}
 
 	if cfg.KeepAlive == nil {
-		cfg.KeepAlive = &common.Duration{Duration: 30 * time.Second}
+		cfg.KeepAlive = &kilntypes.Duration{Duration: 30 * time.Second}
 	}
 
 	return cfg

@@ -3,13 +3,13 @@ package http
 import (
 	"net/http"
 
-	"github.com/skillz-blockchain/go-utils/common"
+	kilntypes "github.com/skillz-blockchain/go-utils/common/types"
 )
 
 // Config for creating an HTTP Client
 type ClientConfig struct {
-	Transport *TransportConfig `json:"transport,omitempty"`
-	Timeout   *common.Duration `json:"timeout,omitempty"`
+	Transport *TransportConfig    `json:"transport,omitempty"`
+	Timeout   *kilntypes.Duration `json:"timeout,omitempty"`
 }
 
 func (cfg *ClientConfig) SetDefault() *ClientConfig {
@@ -19,7 +19,7 @@ func (cfg *ClientConfig) SetDefault() *ClientConfig {
 	cfg.Transport.SetDefault()
 
 	if cfg.Timeout == nil {
-		cfg.Timeout = &common.Duration{Duration: 0}
+		cfg.Timeout = &kilntypes.Duration{Duration: 0}
 	}
 
 	return cfg

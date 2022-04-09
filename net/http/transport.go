@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	kilncommon "github.com/skillz-blockchain/go-utils/common"
+	kilntypes "github.com/skillz-blockchain/go-utils/common/types"
 	kilntls "github.com/skillz-blockchain/go-utils/crypto/tls"
 	kilnnet "github.com/skillz-blockchain/go-utils/net"
 
@@ -15,9 +15,9 @@ import (
 // TransportConfig options to configure communication between Traefik and the servers
 type TransportConfig struct {
 	Dialer                *kilnnet.DialerConfig
-	IdleConnTimeout       *kilncommon.Duration
-	ResponseHeaderTimeout *kilncommon.Duration
-	ExpectContinueTimeout *kilncommon.Duration
+	IdleConnTimeout       *kilntypes.Duration
+	ResponseHeaderTimeout *kilntypes.Duration
+	ExpectContinueTimeout *kilntypes.Duration
 	MaxIdleConnsPerHost   int
 	MaxConnsPerHost       int
 	DisableKeepAlives     bool
@@ -34,15 +34,15 @@ func (cfg *TransportConfig) SetDefault() *TransportConfig {
 	cfg.Dialer.SetDefault()
 
 	if cfg.IdleConnTimeout == nil {
-		cfg.IdleConnTimeout = &kilncommon.Duration{Duration: 90 * time.Second}
+		cfg.IdleConnTimeout = &kilntypes.Duration{Duration: 90 * time.Second}
 	}
 
 	if cfg.ResponseHeaderTimeout == nil {
-		cfg.ResponseHeaderTimeout = &kilncommon.Duration{Duration: 0}
+		cfg.ResponseHeaderTimeout = &kilntypes.Duration{Duration: 0}
 	}
 
 	if cfg.ExpectContinueTimeout == nil {
-		cfg.ExpectContinueTimeout = &kilncommon.Duration{Duration: time.Second}
+		cfg.ExpectContinueTimeout = &kilntypes.Duration{Duration: time.Second}
 	}
 
 	return cfg
