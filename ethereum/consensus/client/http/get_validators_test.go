@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/skillz-blockchain/go-utils/eth2/types"
+	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
 	httptestutils "github.com/skillz-blockchain/go-utils/http/testutils"
 )
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/Azure/go-autorest/autorest"
 
-	"github.com/skillz-blockchain/go-utils/eth2/types"
+	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
 )
 
 // GetValidatorBalances returns list of validator balances.

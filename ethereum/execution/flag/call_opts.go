@@ -4,11 +4,11 @@ import (
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/pflag"
 
-	"github.com/skillz-blockchain/go-utils/eth1"
+	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
 )
 
 // CallOptsVar registers a set of custom flags for eth1.CallOpts
-func CallOptsVar(f *pflag.FlagSet, callOpts *eth1.CallOpts) {
+func CallOptsVar(f *pflag.FlagSet, callOpts *types.CallOpts) {
 	BlockNumberVarP(
 		f,
 		&callOpts.BlockNumber,

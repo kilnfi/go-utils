@@ -5,17 +5,17 @@ import (
 
 	"github.com/spf13/pflag"
 
-	"github.com/skillz-blockchain/go-utils/eth1"
+	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
 )
 
 type blockNumberValue struct {
 	block **big.Int
 }
 
-func (b blockNumberValue) String() string { return eth1.ToBlockNumArg(*b.block) }
+func (b blockNumberValue) String() string { return types.ToBlockNumArg(*b.block) }
 func (b blockNumberValue) Type() string   { return "blockNumber" }
 func (b *blockNumberValue) Set(s string) error {
-	bn, err := eth1.FromBlockNumArg(s)
+	bn, err := types.FromBlockNumArg(s)
 	if err != nil {
 		return err
 	}

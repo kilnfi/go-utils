@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	eth2client "github.com/skillz-blockchain/go-utils/eth2/client"
+	eth2client "github.com/skillz-blockchain/go-utils/ethereum/consensus/client"
 )
 
 func TestClientImplementsInterface(t *testing.T) {

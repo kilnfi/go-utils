@@ -1,4 +1,4 @@
-package eth1
+package client
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	gethhexutil "github.com/ethereum/go-ethereum/common/hexutil"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/skillz-blockchain/go-utils/eth1"
+	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
 	"github.com/skillz-blockchain/go-utils/jsonrpc"
 	jsonrpchttp "github.com/skillz-blockchain/go-utils/jsonrpc/http"
 )
@@ -68,7 +68,7 @@ func (c *Client) BlockNumber(ctx context.Context) (uint64, error) {
 // HeaderByNumber returns header a given block number
 func (c *Client) HeaderByNumber(ctx context.Context, blockNumber *big.Int) (*gethtypes.Header, error) {
 	res := new(gethtypes.Header)
-	err := c.call(ctx, res, "eth_getBlockByNumber", eth1.ToBlockNumArg(blockNumber), false)
+	err := c.call(ctx, res, "eth_getBlockByNumber", types.ToBlockNumArg(blockNumber), false)
 	if err == nil && res == nil {
 		err = geth.NotFound
 	}
@@ -81,7 +81,7 @@ func (c *Client) HeaderByNumber(ctx context.Context, blockNumber *big.Int) (*get
 //nolint:gocritic
 func (c *Client) CallContract(ctx context.Context, msg geth.CallMsg, blockNumber *big.Int) ([]byte, error) {
 	res := new(gethhexutil.Bytes)
-	err := c.call(ctx, res, "eth_call", toCallArg(&msg), eth1.ToBlockNumArg(blockNumber))
+	err := c.call(ctx, res, "eth_call", toCallArg(&msg), types.ToBlockNumArg(blockNumber))
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (c *Client) CallContract(ctx context.Context, msg geth.CallMsg, blockNumber
 // The block number can be nil, in which case the code is taken from the latest block.
 func (c *Client) CodeAt(ctx context.Context, account gethcommon.Address, blockNumber *big.Int) ([]byte, error) {
 	res := new(gethhexutil.Bytes)
-	err := c.call(ctx, res, "eth_getCode", account, eth1.ToBlockNumArg(blockNumber))
+	err := c.call(ctx, res, "eth_getCode", account, types.ToBlockNumArg(blockNumber))
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func (c *Client) PendingCodeAt(ctx context.Context, account gethcommon.Address) 
 // The block number can be nil, in which case the code is taken from the latest block.
 func (c *Client) NonceAt(ctx context.Context, account gethcommon.Address, blockNumber *big.Int) (uint64, error) {
 	res := new(gethhexutil.Uint64)
-	err := c.call(ctx, res, "eth_getTransactionCount", account, eth1.ToBlockNumArg(blockNumber))
+	err := c.call(ctx, res, "eth_getTransactionCount", account, types.ToBlockNumArg(blockNumber))
 	if err != nil {
 		return 0, err
 	}
@@ -221,9 +221,9 @@ func toFilterArg(q geth.FilterQuery) (interface{}, error) {
 		if q.FromBlock == nil {
 			arg["fromBlock"] = "0x0"
 		} else {
-			arg["fromBlock"] = eth1.ToBlockNumArg(q.FromBlock)
+			arg["fromBlock"] = types.ToBlockNumArg(q.FromBlock)
 		}
-		arg["toBlock"] = eth1.ToBlockNumArg(q.ToBlock)
+		arg["toBlock"] = types.ToBlockNumArg(q.ToBlock)
 	}
 	return arg, nil
 }

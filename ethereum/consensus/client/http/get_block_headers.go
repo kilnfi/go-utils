@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 
-	"github.com/skillz-blockchain/go-utils/eth2/types"
+	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
 )
 
 // GetBlockHeaders return block headers

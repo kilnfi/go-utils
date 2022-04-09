@@ -1,4 +1,4 @@
-package eth1
+package client
 
 import (
 	"context"

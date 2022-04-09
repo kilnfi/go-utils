@@ -3,19 +3,19 @@ package flag
 import (
 	"math/big"
 
-	"github.com/spf13/pflag"
+	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
 
-	"github.com/skillz-blockchain/go-utils/eth1"
+	"github.com/spf13/pflag"
 )
 
 type bigIntValue struct {
 	block **big.Int
 }
 
-func (b bigIntValue) String() string { return eth1.EncodeBig(*b.block) }
+func (b bigIntValue) String() string { return types.EncodeBig(*b.block) }
 func (b bigIntValue) Type() string   { return "bigInt" }
 func (b *bigIntValue) Set(s string) error {
-	bn, err := eth1.DecodeBig(s)
+	bn, err := types.DecodeBig(s)
 	if err != nil {
 		return err
 	}

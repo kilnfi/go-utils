@@ -7,7 +7,7 @@ import (
 
 	"github.com/Azure/go-autorest/autorest"
 
-	"github.com/skillz-blockchain/go-utils/eth2/types"
+	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
 )
 
 // GetValidators returns list of validators

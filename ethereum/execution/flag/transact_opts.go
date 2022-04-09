@@ -6,11 +6,11 @@ import (
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/pflag"
 
-	"github.com/skillz-blockchain/go-utils/eth1"
+	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
 )
 
 // TransactOptsVar registers a set of custom flags for eth1.TransactOpts
-func TransactOptsVar(f *pflag.FlagSet, txOpts *eth1.TransactOpts) {
+func TransactOptsVar(f *pflag.FlagSet, txOpts *types.TransactOpts) {
 	AddressVar(
 		f,
 		&txOpts.From,

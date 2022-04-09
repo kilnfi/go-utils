@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/skillz-blockchain/go-utils/eth2/types"
+	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
 
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 	beaconphase0 "github.com/protolambda/zrnt/eth2/beacon/phase0"
