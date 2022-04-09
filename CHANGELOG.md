@@ -1,6 +1,6 @@
 # Go-utils changelog
 
-## v0.1.0 (Unreleased)
+## v0.1.0 (April 9th 2022)
 
 ### :dizzy: Features
 
