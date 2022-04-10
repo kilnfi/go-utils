@@ -44,9 +44,9 @@ Environment variable: %q`, []string{"text", "json"}, formatEnv)
 	_ = v.BindEnv(FormatViperKey, formatEnv)
 }
 
-func NewConfigFromViper(vipr *viper.Viper) *Config {
+func NewConfigFromViper(v *viper.Viper) *Config {
 	return &Config{
-		Format: vipr.GetString(FormatViperKey),
-		Level:  vipr.GetString(LevelViperKey),
+		Format: v.GetString(FormatViperKey),
+		Level:  v.GetString(LevelViperKey),
 	}
 }

@@ -31,8 +31,8 @@ func VaultAddress(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault Address.
 Environment variable: %q`, vaultAddrEnv)
 	f.String(vaultAddrFlag, "", desc)
-	_ = viper.BindPFlag(VaultAddrViperKey, f.Lookup(vaultAddrFlag))
-	_ = viper.BindEnv(VaultAddrViperKey, vaultAddrEnv)
+	_ = v.BindPFlag(VaultAddrViperKey, f.Lookup(vaultAddrFlag))
+	_ = v.BindEnv(VaultAddrViperKey, vaultAddrEnv)
 
 }
 
@@ -47,9 +47,9 @@ func VaultMount(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault mount path.
 Environment variable: %q`, vaultMountEnv)
 	f.String(vaultMountFlag, vaultMountDefault, desc)
-	_ = viper.BindPFlag(vaultMountViperKey, f.Lookup(vaultMountFlag))
-	_ = viper.BindEnv(vaultMountViperKey, vaultMountEnv)
-	viper.SetDefault(vaultMountViperKey, vaultMountDefault)
+	_ = v.BindPFlag(vaultMountViperKey, f.Lookup(vaultMountFlag))
+	_ = v.BindEnv(vaultMountViperKey, vaultMountEnv)
+	v.SetDefault(vaultMountViperKey, vaultMountDefault)
 }
 
 const (
@@ -62,8 +62,8 @@ func VaultToken(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault token.
 Environment variable: %q`, vaultTokenEnv)
 	f.String(vaultTokenFlag, "", desc)
-	_ = viper.BindPFlag(VaultTokenViperKey, f.Lookup(vaultTokenFlag))
-	_ = viper.BindEnv(VaultTokenViperKey, vaultTokenEnv)
+	_ = v.BindPFlag(VaultTokenViperKey, f.Lookup(vaultTokenFlag))
+	_ = v.BindEnv(VaultTokenViperKey, vaultTokenEnv)
 }
 
 const (
@@ -76,8 +76,8 @@ func VaultAuthGitHubToken(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault GitHub token.
 Environment variable: %q`, vaultAuthGithubTokenEnv)
 	f.String(vaultAuthGithubTokenFlag, "", desc)
-	_ = viper.BindPFlag(VaultAuthGithubTokenViperKey, f.Lookup(vaultAuthGithubTokenFlag))
-	_ = viper.BindEnv(VaultAuthGithubTokenViperKey, vaultAuthGithubTokenEnv)
+	_ = v.BindPFlag(VaultAuthGithubTokenViperKey, f.Lookup(vaultAuthGithubTokenFlag))
+	_ = v.BindEnv(VaultAuthGithubTokenViperKey, vaultAuthGithubTokenEnv)
 }
 
 const (
@@ -90,8 +90,8 @@ func VaultTLSSkipVerify(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Key Manager, disables SSL certificate verification.
 Environment variable: %q`, vaultTLSSkipVerifyEnv)
 	f.Bool(vaultTLSSkipVerifyFlag, false, desc)
-	_ = viper.BindPFlag(vaultTLSSkipVerifyViperKey, f.Lookup(vaultTLSSkipVerifyFlag))
-	_ = viper.BindEnv(vaultTLSSkipVerifyViperKey, vaultTLSSkipVerifyEnv)
+	_ = v.BindPFlag(vaultTLSSkipVerifyViperKey, f.Lookup(vaultTLSSkipVerifyFlag))
+	_ = v.BindEnv(vaultTLSSkipVerifyViperKey, vaultTLSSkipVerifyEnv)
 }
 
 const (
@@ -116,33 +116,33 @@ func VaultTLSCert(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault TLS certificate file.
 Environment variable: %q`, vaultTLSCertEnv)
 	f.String(vaultTLSCertFlag, "", desc)
-	_ = viper.BindPFlag(vaultTLSCertViperKey, f.Lookup(vaultTLSCertFlag))
-	_ = viper.BindEnv(vaultTLSCertViperKey, vaultTLSCertEnv)
+	_ = v.BindPFlag(vaultTLSCertViperKey, f.Lookup(vaultTLSCertFlag))
+	_ = v.BindEnv(vaultTLSCertViperKey, vaultTLSCertEnv)
 }
 
 func VaultTLSKey(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault TLS key file.
 Environment variable: %q`, vaultTLSKeyEnv)
 	f.String(vaultTLSKeyFlag, "", desc)
-	_ = viper.BindPFlag(vaultTLSKeyViperKey, f.Lookup(vaultTLSKeyFlag))
-	_ = viper.BindEnv(vaultTLSKeyViperKey, vaultTLSKeyEnv)
+	_ = v.BindPFlag(vaultTLSKeyViperKey, f.Lookup(vaultTLSKeyFlag))
+	_ = v.BindEnv(vaultTLSKeyViperKey, vaultTLSKeyEnv)
 }
 
 func VaultTLSCA(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault TLS certificate CA file.
 Environment variable: %q`, vaultTLSCAEnv)
 	f.String(vaultTLSCAFlag, "", desc)
-	_ = viper.BindPFlag(vaultTLSCAViperKey, f.Lookup(vaultTLSCAFlag))
-	_ = viper.BindEnv(vaultTLSCAViperKey, vaultTLSCAEnv)
+	_ = v.BindPFlag(vaultTLSCAViperKey, f.Lookup(vaultTLSCAFlag))
+	_ = v.BindEnv(vaultTLSCAViperKey, vaultTLSCAEnv)
 }
 
-func NewClientConfigFromViper(vipr *viper.Viper) *ClientConfig {
+func NewClientConfigFromViper(v *viper.Viper) *ClientConfig {
 	cfg := &ClientConfig{
-		Address: viper.GetString(VaultAddrViperKey),
-		Mount:   viper.GetString(vaultMountViperKey),
+		Address: v.GetString(VaultAddrViperKey),
+		Mount:   v.GetString(vaultMountViperKey),
 		Auth: &AuthConfig{
-			Token:       viper.GetString(VaultTokenViperKey),
-			GitHubToken: viper.GetString(VaultAuthGithubTokenViperKey),
+			Token:       v.GetString(VaultTokenViperKey),
+			GitHubToken: v.GetString(VaultAuthGithubTokenViperKey),
 		},
 		HTTP: &kilnhttp.ClientConfig{
 			Transport: &kilnhttp.TransportConfig{
@@ -151,13 +151,13 @@ func NewClientConfigFromViper(vipr *viper.Viper) *ClientConfig {
 		},
 	}
 
-	caPath := vipr.GetString(vaultTLSCAViperKey)
+	caPath := v.GetString(vaultTLSCAViperKey)
 	if caPath != "" {
 		cfg.HTTP.Transport.TLS.CAs = append(cfg.HTTP.Transport.TLS.CAs, &kilntls.CertificateFileCA{Path: caPath})
 	}
 
-	certPath := vipr.GetString(vaultTLSCertViperKey)
-	keyPath := vipr.GetString(vaultTLSKeyViperKey)
+	certPath := v.GetString(vaultTLSCertViperKey)
+	keyPath := v.GetString(vaultTLSKeyViperKey)
 	if certPath != "" || keyPath != "" {
 		cfg.HTTP.Transport.TLS.Certificates = append(
 			cfg.HTTP.Transport.TLS.Certificates,

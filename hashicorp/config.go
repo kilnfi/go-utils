@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/vault/api"
 	"golang.org/x/time/rate"
 
+	"github.com/skillz-blockchain/go-utils/common"
 	kilntypes "github.com/skillz-blockchain/go-utils/common/types"
 	kilntls "github.com/skillz-blockchain/go-utils/crypto/tls"
 	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
@@ -52,7 +53,7 @@ func (cfg *ClientConfig) SetDefault() *ClientConfig {
 	}
 
 	if cfg.MaxRetries == nil {
-		cfg.MaxRetries = kilntypes.IntPtr(2)
+		cfg.MaxRetries = common.IntPtr(2)
 	}
 
 	if cfg.RateLimit == nil {
