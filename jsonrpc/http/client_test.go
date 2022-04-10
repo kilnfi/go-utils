@@ -24,7 +24,7 @@ func TestCall(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockCli := httptestutils.NewMockSender(ctrl)
-	c := NewClient(mockCli)
+	c := NewClientFromClient(mockCli)
 
 	t.Run("StatusOKAndValidResult", func(t *testing.T) { testCallStatusOKAndValidResult(t, c, mockCli) })
 	t.Run("StatusOKAndError", func(t *testing.T) { testCallStatusOKAndError(t, c, mockCli) })

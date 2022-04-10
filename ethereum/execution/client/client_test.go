@@ -29,7 +29,7 @@ func TestClient(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockCli := httptestutils.NewMockSender(ctrl)
-	c := New(jsonrpchttp.NewClient(mockCli))
+	c := NewFromClient(jsonrpchttp.NewClientFromClient(mockCli))
 
 	t.Run("BlockNumber", func(t *testing.T) { testBlockNumber(t, c, mockCli) })
 	t.Run("HeaderByNumber", func(t *testing.T) { testHeaderByNumber(t, c, mockCli) })

@@ -23,15 +23,20 @@ type Client struct {
 }
 
 // New creates a new client
-func New(cli jsonrpc.Client) *Client {
+func NewFromClient(cli jsonrpc.Client) *Client {
 	return &Client{
 		client: cli,
 	}
 }
 
 // NewFromAddress creates a new client connecting to an Ethereum node at addr
-func NewFromAddress(addr string) *Client {
-	return New(jsonrpc.WithIncrementalID()(jsonrpc.WithVersion("2.0")(jsonrpchttp.NewClientFromAddress(addr))))
+func New(cfg *jsonrpchttp.Config) (*Client, error) {
+	jsonrpcc, err := jsonrpchttp.NewClient(cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewFromClient(jsonrpc.WithIncrementalID()(jsonrpc.WithVersion("2.0")(jsonrpcc))), nil
 }
 
 func (c *Client) Logger() logrus.FieldLogger {

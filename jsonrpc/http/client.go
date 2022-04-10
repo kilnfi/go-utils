@@ -11,6 +11,7 @@ import (
 
 	httppreparer "github.com/skillz-blockchain/go-utils/http/preparer"
 	"github.com/skillz-blockchain/go-utils/jsonrpc"
+	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
 )
 
 // Client allows to connect to a JSON-RPC server
@@ -21,22 +22,30 @@ type Client struct {
 }
 
 // NewClient creates a new client connected to a JSON-RPC server
-func NewClient(client autorest.Sender) *Client {
+func NewClientFromClient(s autorest.Sender) *Client {
 	c := &Client{
-		client: client,
+		client: s,
 	}
+
 	c.SetLogger(logrus.StandardLogger())
+
 	return c
 }
 
-// NewClient creates a new client connected to a JSON-RPC server exposed at given address
-func NewClientFromAddress(addr string) *Client {
-	return NewClient(autorest.Client{
-		Sender:           http.DefaultClient,
-		RequestInspector: httppreparer.WithBaseURL(addr),
-	})
-}
+// NewClient creates a client connecting to an Ethereum 2.0 Beacon chain node at given addr
+func NewClient(cfg *Config) (*Client, error) {
+	httpc, err := kilnhttp.NewClient(cfg.HTTP)
+	if err != nil {
+		return nil, err
+	}
 
+	return NewClientFromClient(
+		autorest.Client{
+			Sender:           httpc,
+			RequestInspector: httppreparer.WithBaseURL(cfg.Address),
+		},
+	), nil
+}
 func (c *Client) Logger() logrus.FieldLogger {
 	return c.logger
 }
