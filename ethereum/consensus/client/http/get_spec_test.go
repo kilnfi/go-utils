@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/protolambda/zrnt/eth2/configs"
-	httptestutils "github.com/skillz-blockchain/go-utils/http/testutils"
+	httptestutils "github.com/skillz-blockchain/go-utils/net/http/testutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

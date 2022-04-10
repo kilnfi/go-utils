@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
-	httptestutils "github.com/skillz-blockchain/go-utils/http/testutils"
+	httptestutils "github.com/skillz-blockchain/go-utils/net/http/testutils"
 )
 
 func TestGetGenesis(t *testing.T) {

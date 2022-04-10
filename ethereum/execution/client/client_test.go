@@ -13,8 +13,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	httptestutils "github.com/skillz-blockchain/go-utils/http/testutils"
-	jsonrpchttp "github.com/skillz-blockchain/go-utils/jsonrpc/http"
+	httptestutils "github.com/skillz-blockchain/go-utils/net/http/testutils"
+	jsonrpchttp "github.com/skillz-blockchain/go-utils/net/jsonrpc/http"
 )
 
 func TestClientImplementsGetBindingInterface(t *testing.T) {

@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	httptestutils "github.com/skillz-blockchain/go-utils/http/testutils"
-	"github.com/skillz-blockchain/go-utils/jsonrpc"
+	httptestutils "github.com/skillz-blockchain/go-utils/net/http/testutils"
+	"github.com/skillz-blockchain/go-utils/net/jsonrpc"
 )
 
 func TestClientImplementseth2Interface(t *testing.T) {

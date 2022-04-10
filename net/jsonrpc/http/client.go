@@ -9,9 +9,9 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/sirupsen/logrus"
 
-	httppreparer "github.com/skillz-blockchain/go-utils/http/preparer"
-	"github.com/skillz-blockchain/go-utils/jsonrpc"
 	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
+	httppreparer "github.com/skillz-blockchain/go-utils/net/http/preparer"
+	"github.com/skillz-blockchain/go-utils/net/jsonrpc"
 )
 
 // Client allows to connect to a JSON-RPC server
@@ -46,6 +46,7 @@ func NewClient(cfg *Config) (*Client, error) {
 		},
 	), nil
 }
+
 func (c *Client) Logger() logrus.FieldLogger {
 	return c.logger
 }

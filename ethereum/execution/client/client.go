@@ -13,8 +13,8 @@ import (
 
 	"github.com/skillz-blockchain/go-utils/common/interfaces"
 	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
-	"github.com/skillz-blockchain/go-utils/jsonrpc"
-	jsonrpchttp "github.com/skillz-blockchain/go-utils/jsonrpc/http"
+	"github.com/skillz-blockchain/go-utils/net/jsonrpc"
+	jsonrpchttp "github.com/skillz-blockchain/go-utils/net/jsonrpc/http"
 )
 
 // Client provides methods to interface with a JSON-RPC Ethereum 1.0 node

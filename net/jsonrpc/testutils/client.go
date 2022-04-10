@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	jsonrpc "github.com/skillz-blockchain/go-utils/jsonrpc"
+	jsonrpc "github.com/skillz-blockchain/go-utils/net/jsonrpc"
 )
 
 // MockClient is a mock of Client interface.

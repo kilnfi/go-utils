@@ -5,7 +5,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 
-	jsonrpc "github.com/skillz-blockchain/go-utils/jsonrpc"
+	jsonrpc "github.com/skillz-blockchain/go-utils/net/jsonrpc"
 )
 
 type matcher struct {
