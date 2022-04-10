@@ -10,6 +10,17 @@ import (
 
 // GetBlockAttestations returns attestations included in requested block with given blockID
 func (c *Client) GetBlockAttestations(ctx context.Context, blockID string) (beaconphase0.Attestations, error) {
+	rv, err := c.getBlockAttestations(ctx, blockID)
+	if err != nil {
+		c.logger.
+			WithField("block", blockID).
+			WithError(err).Errorf("GetBlockAttestations failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getBlockAttestations(ctx context.Context, blockID string) (beaconphase0.Attestations, error) {
 	req, err := newGetBlockAttestationsRequest(ctx, blockID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetBlockAttestations", nil, "Failure preparing request")

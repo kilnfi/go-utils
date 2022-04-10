@@ -1,13 +1,17 @@
 package log
 
-import (
-	"io"
-
-	"github.com/sirupsen/logrus"
-)
-
 type Config struct {
-	Level  logrus.Level `json:"level"`
-	Format string       `json:"format"`
-	Out    io.Writer    `json:"-"`
+	Level, Format string
+}
+
+func (cfg *Config) SetDefault() *Config {
+	if cfg.Level == "" {
+		cfg.Level = "info"
+	}
+
+	if cfg.Format == "" {
+		cfg.Format = "json"
+	}
+
+	return cfg
 }

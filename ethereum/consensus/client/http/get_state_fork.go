@@ -10,6 +10,17 @@ import (
 
 // GetStateFork returns Fork object for state with given stateID
 func (c *Client) GetStateFork(ctx context.Context, stateID string) (*beaconcommon.Fork, error) {
+	rv, err := c.getStateFork(ctx, stateID)
+	if err != nil {
+		c.logger.
+			WithField("state", stateID).
+			WithError(err).Errorf("GetStateFork failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getStateFork(ctx context.Context, stateID string) (*beaconcommon.Fork, error) {
 	req, err := newGetStateForkRequest(ctx, stateID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetStateFork", nil, "Failure preparing request")

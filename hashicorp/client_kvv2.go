@@ -16,7 +16,7 @@ type KVv2Client struct {
 
 	cfg *ClientConfig
 
-	logger *logrus.Logger
+	logger logrus.FieldLogger
 }
 
 func NewKVv2Client(cfg *ClientConfig) (*KVv2Client, error) {
@@ -30,18 +30,22 @@ func NewKVv2Client(cfg *ClientConfig) (*KVv2Client, error) {
 		return nil, err
 	}
 
-	return &KVv2Client{
+	c := &KVv2Client{
 		cfg:    cfg,
 		Client: client,
-	}, nil
+	}
+
+	c.SetLogger(logrus.StandardLogger())
+
+	return c, nil
 }
 
-func (c *KVv2Client) Logger() *logrus.Logger {
+func (c *KVv2Client) Logger() logrus.FieldLogger {
 	return c.logger
 }
 
-func (c *KVv2Client) SetLogger(logger *logrus.Logger) {
-	c.logger = logger
+func (c *KVv2Client) SetLogger(logger logrus.FieldLogger) {
+	c.logger = logger.WithField("component", "hashicorp.kvv2-client")
 }
 
 func (c *KVv2Client) validateAddress() (err error) {

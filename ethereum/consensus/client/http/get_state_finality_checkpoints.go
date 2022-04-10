@@ -12,6 +12,17 @@ import (
 // GetStateFinalityCheckpoints returns finality checkpoints for state with given stateID
 // In case finality is not yet achieved returns epoch 0 and ZERO_HASH as root.
 func (c *Client) GetStateFinalityCheckpoints(ctx context.Context, stateID string) (*types.StateFinalityCheckpoints, error) {
+	rv, err := c.getStateFinalityCheckpoints(ctx, stateID)
+	if err != nil {
+		c.logger.
+			WithField("state", stateID).
+			WithError(err).Errorf("GetStateFinalityCheckpoints failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getStateFinalityCheckpoints(ctx context.Context, stateID string) (*types.StateFinalityCheckpoints, error) {
 	req, err := newGetStateFinalityCheckpointsRequest(ctx, stateID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetStateFinalityCheckpoints", nil, "Failure preparing request")

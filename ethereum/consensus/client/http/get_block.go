@@ -10,6 +10,17 @@ import (
 
 // GetBlock returns block details for given block id.
 func (c *Client) GetBlock(ctx context.Context, blockID string) (*beaconphase0.SignedBeaconBlock, error) {
+	rv, err := c.getBlock(ctx, blockID)
+	if err != nil {
+		c.logger.
+			WithField("block", blockID).
+			WithError(err).Errorf("GetBlock failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getBlock(ctx context.Context, blockID string) (*beaconphase0.SignedBeaconBlock, error) {
 	req, err := newGetBlockRequest(ctx, blockID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetBlock", nil, "Failure preparing request")

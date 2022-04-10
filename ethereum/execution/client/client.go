@@ -9,7 +9,9 @@ import (
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	gethhexutil "github.com/ethereum/go-ethereum/common/hexutil"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/sirupsen/logrus"
 
+	"github.com/skillz-blockchain/go-utils/common/interfaces"
 	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
 	"github.com/skillz-blockchain/go-utils/jsonrpc"
 	jsonrpchttp "github.com/skillz-blockchain/go-utils/jsonrpc/http"
@@ -30,6 +32,19 @@ func New(cli jsonrpc.Client) *Client {
 // NewFromAddress creates a new client connecting to an Ethereum node at addr
 func NewFromAddress(addr string) *Client {
 	return New(jsonrpc.WithIncrementalID()(jsonrpc.WithVersion("2.0")(jsonrpchttp.NewClientFromAddress(addr))))
+}
+
+func (c *Client) Logger() logrus.FieldLogger {
+	if loggable, ok := c.client.(interfaces.Loggable); ok {
+		return loggable.Logger()
+	}
+	return nil
+}
+
+func (c *Client) SetLogger(logger logrus.FieldLogger) {
+	if loggable, ok := c.client.(interfaces.Loggable); ok {
+		loggable.SetLogger(logger)
+	}
 }
 
 func (c *Client) call(ctx context.Context, res interface{}, method string, params ...interface{}) error {

@@ -13,6 +13,18 @@ import (
 // GetSyncCommittees returns the sync committees for given stateID
 // Set epoch to filter result (if nil no filter is applied)
 func (c *Client) GetSyncCommittees(ctx context.Context, stateID string, epoch *beaconcommon.Epoch) (*types.SyncCommittees, error) {
+	rv, err := c.getSyncCommittees(ctx, stateID, epoch)
+	if err != nil {
+		c.logger.
+			WithField("state", stateID).
+			WithField("epoch", epoch).
+			WithError(err).Errorf("GetSyncCommittees failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getSyncCommittees(ctx context.Context, stateID string, epoch *beaconcommon.Epoch) (*types.SyncCommittees, error) {
 	req, err := newGetSyncCommitteesRequest(ctx, stateID, epoch)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetSyncCommittees", nil, "Failure preparing request")

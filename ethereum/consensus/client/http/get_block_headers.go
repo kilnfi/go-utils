@@ -13,6 +13,18 @@ import (
 // GetBlockHeaders return block headers
 // Set slot and/or parentRoot to filter result (if nil no filter is applied)
 func (c *Client) GetBlockHeaders(ctx context.Context, slot *beaconcommon.Slot, parentRoot *beaconcommon.Root) ([]*types.BeaconBlockHeader, error) {
+	rv, err := c.getBlockHeaders(ctx, slot, parentRoot)
+	if err != nil {
+		c.logger.
+			WithField("slot", slot).
+			WithField("parent.root", parentRoot).
+			WithError(err).Errorf("GetBlockHeaders failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getBlockHeaders(ctx context.Context, slot *beaconcommon.Slot, parentRoot *beaconcommon.Root) ([]*types.BeaconBlockHeader, error) {
 	req, err := newGetBlockHeadersRequest(ctx, slot, parentRoot)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetBlockHeaders", nil, "Failure preparing request")

@@ -10,6 +10,15 @@ import (
 
 // GetProposerSlashings returns proposer slashings known by the node but not necessarily incorporated into any block.
 func (c *Client) GetProposerSlashings(ctx context.Context) (beaconphase0.ProposerSlashings, error) {
+	rv, err := c.getProposerSlashings(ctx)
+	if err != nil {
+		c.logger.WithError(err).Errorf("GetProposerSlashings failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getProposerSlashings(ctx context.Context) (beaconphase0.ProposerSlashings, error) {
 	req, err := newGetProposerSlashingsRequest(ctx)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetProposerSlashings", nil, "Failure preparing request")

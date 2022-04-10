@@ -9,8 +9,17 @@ import (
 	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
 )
 
-// GetGenesis returns details of the chain's genesis
+// GetGenesis returns genesis block
 func (c *Client) GetGenesis(ctx context.Context) (*types.Genesis, error) {
+	rv, err := c.getGenesis(ctx)
+	if err != nil {
+		c.logger.WithError(err).Errorf("GetGenesis failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getGenesis(ctx context.Context) (*types.Genesis, error) {
 	req, err := newGetGenesisRequest(ctx)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetGenesis", nil, "Failure preparing request")

@@ -8,8 +8,19 @@ import (
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 )
 
-// GetStateRoot calculates HashTreeRoot of the state for the given stateID
+// GetStateRoot returns State root for state with given stateID
 func (c *Client) GetStateRoot(ctx context.Context, stateID string) (*beaconcommon.Root, error) {
+	rv, err := c.getStateRoot(ctx, stateID)
+	if err != nil {
+		c.logger.
+			WithField("state", stateID).
+			WithError(err).Errorf("GetStateFork failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getStateRoot(ctx context.Context, stateID string) (*beaconcommon.Root, error) {
 	req, err := newGetStateRootRequest(ctx, stateID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetStateRoot", nil, "Failure preparing request")

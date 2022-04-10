@@ -10,6 +10,15 @@ import (
 
 // GetVoluntaryExits returns voluntary exits known by the node but not necessarily incorporated into any block.
 func (c *Client) GetVoluntaryExits(ctx context.Context) (beaconphase0.VoluntaryExits, error) {
+	rv, err := c.getVoluntaryExits(ctx)
+	if err != nil {
+		c.logger.WithError(err).Errorf("GetVoluntaryExits failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getVoluntaryExits(ctx context.Context) (beaconphase0.VoluntaryExits, error) {
 	req, err := newGetVoluntaryExitsRequest(ctx)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetVoluntaryExits", nil, "Failure preparing request")

@@ -10,6 +10,17 @@ import (
 
 // GetBlockRoot returns hashTreeRoot of block
 func (c *Client) GetBlockRoot(ctx context.Context, blockID string) (*beaconcommon.Root, error) {
+	rv, err := c.getBlockRoot(ctx, blockID)
+	if err != nil {
+		c.logger.
+			WithField("block", blockID).
+			WithError(err).Errorf("GetBlockRoot failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getBlockRoot(ctx context.Context, blockID string) (*beaconcommon.Root, error) {
 	req, err := newGetBlockRootRequest(ctx, blockID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetBlockRoot", nil, "Failure preparing request")

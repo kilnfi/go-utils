@@ -10,6 +10,15 @@ import (
 
 // GetSpec returns Ethreum 2.0 specifications configuration used on the node.
 func (c *Client) GetSpec(ctx context.Context) (*beaconcommon.Spec, error) {
+	rv, err := c.getSpec(ctx)
+	if err != nil {
+		c.logger.WithError(err).Errorf("GetSpec failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getSpec(ctx context.Context) (*beaconcommon.Spec, error) {
 	req, err := newGetSpecRequest(ctx)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetSpec", nil, "Failure preparing request")

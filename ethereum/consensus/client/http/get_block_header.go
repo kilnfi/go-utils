@@ -11,6 +11,18 @@ import (
 
 // GetBlockHeader returns block header for given blockID
 func (c *Client) GetBlockHeader(ctx context.Context, blockID string) (*types.BeaconBlockHeader, error) {
+	rv, err := c.getBlockHeader(ctx, blockID)
+	if err != nil {
+		c.logger.
+			WithField("block", blockID).
+			WithError(err).Errorf("GetBlockHeader failed")
+	}
+
+	return rv, err
+}
+
+// GetBlockHeader returns block header for given blockID
+func (c *Client) getBlockHeader(ctx context.Context, blockID string) (*types.BeaconBlockHeader, error) {
 	req, err := newGetBlockHeaderRequest(ctx, blockID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetBlockHeader", nil, "Failure preparing request")

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/Azure/go-autorest/autorest"
+	"github.com/sirupsen/logrus"
 
 	httppreparer "github.com/skillz-blockchain/go-utils/http/preparer"
 	"github.com/skillz-blockchain/go-utils/jsonrpc"
@@ -15,13 +16,17 @@ import (
 // Client allows to connect to a JSON-RPC server
 type Client struct {
 	client autorest.Sender
+
+	logger logrus.FieldLogger
 }
 
 // NewClient creates a new client connected to a JSON-RPC server
 func NewClient(client autorest.Sender) *Client {
-	return &Client{
+	c := &Client{
 		client: client,
 	}
+	c.SetLogger(logrus.StandardLogger())
+	return c
 }
 
 // NewClient creates a new client connected to a JSON-RPC server exposed at given address
@@ -32,8 +37,30 @@ func NewClientFromAddress(addr string) *Client {
 	})
 }
 
-// Call performs JSON-RPC call
+func (c *Client) Logger() logrus.FieldLogger {
+	return c.logger
+}
+
+func (c *Client) SetLogger(logger logrus.FieldLogger) {
+	c.logger = logger.WithField("component", "jsonrpc.http-client")
+}
+
 func (c *Client) Call(ctx context.Context, r *jsonrpc.Request, res interface{}) error {
+	err := c.call(ctx, r, res)
+	if err != nil {
+		c.logger.
+			WithField("req.method", r.Method).
+			WithField("req.version", r.Version).
+			WithField("req.params", r.Params).
+			WithField("req.id", r.ID).
+			WithError(err).Errorf("jsonrpc call failed")
+	}
+
+	return err
+}
+
+// Call performs JSON-RPC call
+func (c *Client) call(ctx context.Context, r *jsonrpc.Request, res interface{}) error {
 	req, err := newCallRequest(ctx, r)
 	if err != nil {
 		return autorest.NewErrorWithError(err, "jsonrpchttp.Client", "Call", nil, "Request")

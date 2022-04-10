@@ -11,6 +11,18 @@ import (
 
 // GetValidator returns validator specified by stateID and validatorID
 func (c *Client) GetValidator(ctx context.Context, stateID, validatorID string) (*types.Validator, error) {
+	rv, err := c.getValidator(ctx, stateID, validatorID)
+	if err != nil {
+		c.logger.
+			WithField("state", stateID).
+			WithField("validator.id", validatorID).
+			WithError(err).Errorf("GetValidator failed")
+	}
+
+	return rv, err
+}
+
+func (c *Client) getValidator(ctx context.Context, stateID, validatorID string) (*types.Validator, error) {
 	req, err := newGetValidatorRequest(ctx, stateID, validatorID)
 	if err != nil {
 		return nil, autorest.NewErrorWithError(err, "eth2http.Client", "GetValidator", nil, "Failure preparing request")
