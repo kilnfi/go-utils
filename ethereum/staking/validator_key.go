@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	_ "github.com/skillz-blockchain/go-utils/crypto/bls"
+	_ "github.com/skillz-blockchain/go-utils/crypto/bls" // nolint
 	e2types "github.com/wealdtech/go-eth2-types/v2"
 	util "github.com/wealdtech/go-eth2-util"
 )
@@ -23,7 +23,7 @@ type ValidatorKey struct {
 	Desc string
 }
 
-func GenerateValidatorKey(seed []byte, path string, desc string) (*ValidatorKey, error) {
+func GenerateValidatorKey(seed []byte, path, desc string) (*ValidatorKey, error) {
 	privKey, err := util.PrivateKeyFromSeedAndPath(seed, path)
 	if err != nil {
 		return nil, err

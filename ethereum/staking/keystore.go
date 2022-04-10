@@ -56,8 +56,8 @@ func (mngr *KeystoreManager) EncryptToPbkdf2Keystore(vKey *ValidatorKey, pwd str
 }
 
 func (mngr *KeystoreManager) DecryptFromKeystore(ks map[string]interface{}, pwd string) (*ValidatorKey, error) {
-	version, ok := ks["version"]
-	if ok {
+	version, hasV := ks["version"]
+	if hasV {
 		v, ok := version.(int)
 		if ok && v != 4 {
 			return nil, fmt.Errorf("invalid keystore version %v (version 4 expected)", v)
@@ -88,8 +88,8 @@ func (mngr *KeystoreManager) DecryptFromKeystore(ks map[string]interface{}, pwd 
 		vkey.Path, _ = pth.(string)
 	}
 
-	if uuid, ok := ks["uuid"]; ok {
-		vkey.UUID, _ = uuid.(string)
+	if UUID, ok := ks["uuid"]; ok {
+		vkey.UUID, _ = UUID.(string)
 	}
 
 	if desc, ok := ks["description"]; ok {

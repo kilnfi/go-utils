@@ -211,7 +211,7 @@ func (c *KVv2Client) Put(ctx context.Context, id string, data map[string]interfa
 	)
 }
 
-func (c *KVv2Client) Get(ctx context.Context, pth string, version string) (secret *api.Secret, data, metadata map[string]interface{}, err error) {
+func (c *KVv2Client) Get(ctx context.Context, pth, version string) (secret *api.Secret, data, metadata map[string]interface{}, err error) {
 	query := map[string][]string{}
 	if version != "" {
 		query["version"] = []string{version}
@@ -291,7 +291,7 @@ func (c *KVv2Client) metadaDataPath(id string) string {
 	return path.Join(c.mountPath, "metadata", c.basePath, id)
 }
 
-func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) (string, int, error) {
+func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) (mountPath string, version int, err error) {
 	// We don't want to use a wrapping call here so save any custom value and
 	// restore after
 	currentWrappingLookupFunc := c.Client.CurrentWrappingLookupFunc()
@@ -303,7 +303,7 @@ func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) 
 
 	r := c.Client.NewRequest("GET", path.Join("/v1/sys/internal/ui/mounts", pth))
 
-	resp, err := c.Client.RawRequestWithContext(ctx, r)
+	resp, err := c.Client.RawRequestWithContext(ctx, r) //nolint
 	if resp != nil {
 		defer resp.Body.Close()
 	}
@@ -325,7 +325,6 @@ func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) 
 		return "", 0, fmt.Errorf("nil response from pre-flight request")
 	}
 
-	var mountPath string
 	if mountPathRaw, ok := secret.Data["path"]; ok {
 		mountPath = mountPathRaw.(string)
 	}
@@ -337,8 +336,8 @@ func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) 
 	if versionRaw == nil {
 		return mountPath, 1, nil
 	}
-	version := versionRaw.(string)
-	switch version {
+
+	switch versionRaw.(string) {
 	case "", "1":
 		return mountPath, 1, nil
 	case "2":
@@ -348,8 +347,8 @@ func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) 
 	return mountPath, 1, nil
 }
 
-func (c *KVv2Client) IsKVv2(ctx context.Context, path string) (string, bool, error) {
-	mountPath, version, err := c.kvPreflightVersionRequest(ctx, path)
+func (c *KVv2Client) IsKVv2(ctx context.Context, pth string) (mount string, isKVv2 bool, err error) {
+	mountPath, version, err := c.kvPreflightVersionRequest(ctx, pth)
 	if err != nil {
 		return "", false, err
 	}
