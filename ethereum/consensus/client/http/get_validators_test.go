@@ -17,7 +17,7 @@ func TestGetValidators(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockCli := httptestutils.NewMockSender(ctrl)
-	c := NewClient(mockCli)
+	c := NewClientFromClient(mockCli)
 
 	t.Run("StatusOK", func(t *testing.T) { testGetValidatorsStatusOK(t, c, mockCli) })
 }

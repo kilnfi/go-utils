@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	httppreparer "github.com/skillz-blockchain/go-utils/http/preparer"
+	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
 )
 
 // Client provides methods to connect to an Ethereum 2.0 Beacon chain node
@@ -17,10 +18,9 @@ type Client struct {
 	logger logrus.FieldLogger
 }
 
-// NewClient creates a new client
-func NewClient(client autorest.Sender) *Client {
+func NewClientFromClient(s autorest.Sender) *Client {
 	c := &Client{
-		client: client,
+		client: s,
 	}
 
 	c.SetLogger(logrus.StandardLogger())
@@ -29,11 +29,18 @@ func NewClient(client autorest.Sender) *Client {
 }
 
 // NewClient creates a client connecting to an Ethereum 2.0 Beacon chain node at given addr
-func NewClientFromAddress(addr string) *Client {
-	return NewClient(autorest.Client{
-		Sender:           http.DefaultClient,
-		RequestInspector: httppreparer.WithBaseURL(addr),
-	})
+func NewClient(cfg *Config) (*Client, error) {
+	httpc, err := kilnhttp.NewClient(cfg.HTTP)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewClientFromClient(
+		autorest.Client{
+			Sender:           httpc,
+			RequestInspector: httppreparer.WithBaseURL(cfg.Address),
+		},
+	), nil
 }
 
 func (c *Client) Logger() logrus.FieldLogger {

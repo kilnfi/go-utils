@@ -19,7 +19,7 @@ func TestGetGenesis(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockCli := httptestutils.NewMockSender(ctrl)
-	c := NewClient(mockCli)
+	c := NewClientFromClient(mockCli)
 
 	t.Run("StatusOK", func(t *testing.T) { testGetGenesisStatusOK(t, c, mockCli) })
 	t.Run("Status400", func(t *testing.T) { testGetGenesisStatus400(t, c, mockCli) })
