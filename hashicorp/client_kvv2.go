@@ -16,6 +16,8 @@ type KVv2Client struct {
 
 	cfg *ClientConfig
 
+	mountPath, basePath string
+
 	logger logrus.FieldLogger
 }
 
@@ -82,7 +84,7 @@ func (c *KVv2Client) Init(ctx context.Context) error {
 		return err
 	}
 
-	err = c.checkKVv2(ctx)
+	err = c.initKVv2(ctx)
 	if err != nil {
 		return err
 	}
@@ -152,8 +154,8 @@ func (c *KVv2Client) GithubLogin(ctx context.Context) (*api.SecretAuth, error) {
 	return secret.Auth, nil
 }
 
-func (c *KVv2Client) checkKVv2(ctx context.Context) error {
-	mountPath, ok, err := c.IsKVv2(ctx, c.cfg.Mount)
+func (c *KVv2Client) initKVv2(ctx context.Context) error {
+	mountPath, ok, err := c.IsKVv2(ctx, c.cfg.Path)
 	if err != nil {
 		return err
 	}
@@ -161,6 +163,9 @@ func (c *KVv2Client) checkKVv2(ctx context.Context) error {
 	if !ok {
 		return fmt.Errorf("mount %q is not a kv-v2secret engine", mountPath)
 	}
+
+	c.mountPath = mountPath
+	c.basePath = strings.TrimPrefix(c.cfg.Path, mountPath)
 
 	return nil
 }
@@ -279,11 +284,11 @@ func (c *KVv2Client) Delete(ctx context.Context, id string) error {
 }
 
 func (c *KVv2Client) dataPath(id string) string {
-	return path.Join(c.cfg.Mount, "data", "nmvalera", id)
+	return path.Join(c.mountPath, "data", c.basePath, id)
 }
 
 func (c *KVv2Client) metadaDataPath(id string) string {
-	return path.Join(c.cfg.Mount, "metadata", "nmvalera", id)
+	return path.Join(c.mountPath, "metadata", c.basePath, id)
 }
 
 func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) (string, int, error) {
@@ -296,7 +301,7 @@ func (c *KVv2Client) kvPreflightVersionRequest(ctx context.Context, pth string) 
 	c.Client.SetOutputCurlString(false)
 	defer c.Client.SetOutputCurlString(currentOutputCurlString)
 
-	r := c.Client.NewRequest("GET", "/v1/sys/internal/ui/mounts/"+pth)
+	r := c.Client.NewRequest("GET", path.Join("/v1/sys/internal/ui/mounts", pth))
 
 	resp, err := c.Client.RawRequestWithContext(ctx, r)
 	if resp != nil {

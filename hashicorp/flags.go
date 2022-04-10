@@ -37,19 +37,19 @@ Environment variable: %q`, vaultAddrEnv)
 }
 
 const (
-	vaultMountFlag     = "vault-mount"
-	vaultMountViperKey = "vault.mount"
-	vaultMountDefault  = "secret"
-	vaultMountEnv      = "VAULT_MOUNT"
+	vaultPathFlag     = "vault-path"
+	vaultPathViperKey = "vault.path"
+	vaultPathDefault  = "secret"
+	vaultPathEnv      = "VAULT_PATH"
 )
 
 func VaultMount(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Vault mount path.
-Environment variable: %q`, vaultMountEnv)
-	f.String(vaultMountFlag, vaultMountDefault, desc)
-	_ = v.BindPFlag(vaultMountViperKey, f.Lookup(vaultMountFlag))
-	_ = v.BindEnv(vaultMountViperKey, vaultMountEnv)
-	v.SetDefault(vaultMountViperKey, vaultMountDefault)
+Environment variable: %q`, vaultPathEnv)
+	f.String(vaultPathFlag, vaultPathDefault, desc)
+	_ = v.BindPFlag(vaultPathViperKey, f.Lookup(vaultPathFlag))
+	_ = v.BindEnv(vaultPathViperKey, vaultPathEnv)
+	v.SetDefault(vaultPathViperKey, vaultPathDefault)
 }
 
 const (
@@ -139,7 +139,7 @@ Environment variable: %q`, vaultTLSCAEnv)
 func NewClientConfigFromViper(v *viper.Viper) *ClientConfig {
 	cfg := &ClientConfig{
 		Address: v.GetString(VaultAddrViperKey),
-		Mount:   v.GetString(vaultMountViperKey),
+		Path:    v.GetString(vaultPathViperKey),
 		Auth: &AuthConfig{
 			Token:       v.GetString(VaultTokenViperKey),
 			GitHubToken: v.GetString(VaultAuthGithubTokenViperKey),

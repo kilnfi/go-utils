@@ -17,8 +17,7 @@ import (
 // ClientConfig object that be converted into an api.Config later
 type ClientConfig struct {
 	Address string
-
-	Mount string
+	Path    string
 
 	AgentAddress string
 
