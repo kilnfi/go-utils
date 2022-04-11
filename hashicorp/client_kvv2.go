@@ -50,6 +50,25 @@ func (c *KVv2Client) SetLogger(logger logrus.FieldLogger) {
 	c.logger = logger.WithField("component", "hashicorp.kvv2-client")
 }
 
+func (c *KVv2Client) Init(ctx context.Context) error {
+	err := c.validateAddress()
+	if err != nil {
+		return err
+	}
+
+	err = c.initAuth(ctx)
+	if err != nil {
+		return err
+	}
+
+	err = c.initKVv2(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *KVv2Client) validateAddress() (err error) {
 	logger := c.logger.WithField("address", c.cfg.Address)
 	logger.Info("validate Vault address")
@@ -72,26 +91,6 @@ func (c *KVv2Client) validateAddress() (err error) {
 
 	return nil
 }
-
-func (c *KVv2Client) Init(ctx context.Context) error {
-	err := c.validateAddress()
-	if err != nil {
-		return err
-	}
-
-	err = c.initAuth(ctx)
-	if err != nil {
-		return err
-	}
-
-	err = c.initKVv2(ctx)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (c *KVv2Client) initAuth(ctx context.Context) (err error) {
 	c.logger.Info("authenticate on Vault")
 	defer func() {
@@ -99,6 +98,7 @@ func (c *KVv2Client) initAuth(ctx context.Context) (err error) {
 			c.logger.WithError(err).Error("authentication failed")
 		}
 	}()
+
 	if c.cfg.Auth == nil {
 		err = fmt.Errorf("vault authentication credentials missing")
 		return
@@ -106,14 +106,17 @@ func (c *KVv2Client) initAuth(ctx context.Context) (err error) {
 
 	// Vault token has been provided
 	if c.cfg.Auth.Token != "" {
-		c.logger.WithField("auth", "token").Info("authentication succeeded")
 		c.SetToken(c.cfg.Auth.Token)
+		c.logger.
+			WithField("auth", "token").
+			Info("authentication succeeded")
 		return nil
 	}
 
 	// GitHub token has been provided
 	if c.cfg.Auth.GitHubToken != "" {
 		logger := c.logger.WithField("auth", "github")
+
 		// Perform Github login
 		ghSecAuth, ghErr := c.GithubLogin(ctx)
 		if ghErr != nil {
@@ -121,7 +124,7 @@ func (c *KVv2Client) initAuth(ctx context.Context) (err error) {
 			return fmt.Errorf("GitHub authentication failed %v", ghErr)
 		}
 
-		logger.Errorf("authentication succeeded")
+		logger.Infof("authentication succeeded")
 
 		// Set token for subsequent requests
 		c.SetToken(ghSecAuth.ClientToken)
@@ -132,6 +135,28 @@ func (c *KVv2Client) initAuth(ctx context.Context) (err error) {
 	err = fmt.Errorf("vault authentication credentials missing")
 
 	return
+}
+
+func (c *KVv2Client) initKVv2(ctx context.Context) error {
+	c.logger.WithField("path", c.cfg.Path).Info("check Vault mount is kv-v2")
+	mountPath, ok, err := c.IsKVv2(ctx, c.cfg.Path)
+	if err != nil {
+		c.logger.WithError(err).Errorf("failed to check Vault mount")
+		return err
+	}
+
+	logger := c.logger.WithField("mount", mountPath)
+	if !ok {
+		logger.Errorf("Vault mount is not a kv-v2 secret engine")
+		return fmt.Errorf("mount %q is not a kv-v2 secret engine", mountPath)
+	}
+
+	c.mountPath = mountPath
+	c.basePath = strings.TrimPrefix(c.cfg.Path, mountPath)
+
+	logger.WithField("base.path", "c.basePath").Infof("Vault mount is kv-v2")
+
+	return nil
 }
 
 func (c *KVv2Client) GithubLogin(ctx context.Context) (*api.SecretAuth, error) {
@@ -152,22 +177,6 @@ func (c *KVv2Client) GithubLogin(ctx context.Context) (*api.SecretAuth, error) {
 	}
 
 	return secret.Auth, nil
-}
-
-func (c *KVv2Client) initKVv2(ctx context.Context) error {
-	mountPath, ok, err := c.IsKVv2(ctx, c.cfg.Path)
-	if err != nil {
-		return err
-	}
-
-	if !ok {
-		return fmt.Errorf("mount %q is not a kv-v2secret engine", mountPath)
-	}
-
-	c.mountPath = mountPath
-	c.basePath = strings.TrimPrefix(c.cfg.Path, mountPath)
-
-	return nil
 }
 
 func (c *KVv2Client) SetToken(token string) {
