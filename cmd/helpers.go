@@ -13,6 +13,10 @@ func PrintJSON(fnc func(cmd *cobra.Command, args []string) (interface{}, error))
 			return err
 		}
 
+		if res == nil {
+			return nil
+		}
+
 		return json.NewEncoder(cmd.OutOrStdout()).Encode(res)
 	}
 }
