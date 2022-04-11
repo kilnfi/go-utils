@@ -1,4 +1,4 @@
-package cobra
+package cmd
 
 import (
 	"encoding/json"
