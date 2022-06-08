@@ -19,8 +19,17 @@ type ethCLContext struct {
 }
 
 // NewCmdEthCL creates the `eth-cl` command
-func NewCmdEthCL(ctx context.Context) *cobra.Command {
+func NewCmdEthCL(
+	ctx context.Context,
+	newCLClient func(*viper.Viper) (consclient.Client, error),
+) *cobra.Command {
 	ethCLCtx := &ethCLContext{Context: ctx}
+
+	if newCLClient == nil {
+		newCLClient = func(v *viper.Viper) (consclient.Client, error) {
+			return consclienthttp.NewClient(EthCLConfigFromViper(v).SetDefault())
+		}
+	}
 
 	v := ViperFromContext(ctx)
 
@@ -29,7 +38,7 @@ func NewCmdEthCL(ctx context.Context) *cobra.Command {
 		Short: "Commands to interact with Ethereum consensus layer node",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			ethCLCtx.client, err = consclienthttp.NewClient(EthCLConfigFromViper(v).SetDefault())
+			ethCLCtx.client, err = newCLClient(v)
 			return err
 		},
 	}

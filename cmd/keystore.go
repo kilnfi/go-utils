@@ -17,8 +17,17 @@ type keystoreContext struct {
 }
 
 // NewCmdKeystore creates the `eth-el` command
-func NewCmdKeystore(ctx context.Context) *cobra.Command {
+func NewCmdKeystore(
+	ctx context.Context,
+	newKeystore func(*viper.Viper) (keystore.Store, error),
+) *cobra.Command {
 	keystoreCtx := &keystoreContext{Context: ctx}
+
+	if newKeystore == nil {
+		newKeystore = func(v *viper.Viper) (keystore.Store, error) {
+			return gethkeystore.New(KeystoreConfigFromViper(v).SetDefault()), nil
+		}
+	}
 
 	v := ViperFromContext(ctx)
 
@@ -26,8 +35,9 @@ func NewCmdKeystore(ctx context.Context) *cobra.Command {
 		Use:   "eth1keys SUBCOMMAND",
 		Short: "Commands to securely manage Ethereum execution layer keys",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			keystoreCtx.keys = gethkeystore.New(KeystoreConfigFromViper(v).SetDefault())
-			return nil
+			var err error
+			keystoreCtx.keys, err = newKeystore(v)
+			return err
 		},
 	}
 

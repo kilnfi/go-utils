@@ -17,8 +17,17 @@ type ethELContext struct {
 }
 
 // NewCmdEthEL creates the `eth-el` command
-func NewCmdEthEL(ctx context.Context) *cobra.Command {
+func NewCmdEthEL(
+	ctx context.Context,
+	newELClient func(*viper.Viper) (*execclient.Client, error),
+) *cobra.Command {
 	ethELCtx := &ethELContext{Context: ctx}
+
+	if newELClient == nil {
+		newELClient = func(v *viper.Viper) (*execclient.Client, error) {
+			return execclient.New(EthELConfigFromViper(v).SetDefault())
+		}
+	}
 
 	v := ViperFromContext(ctx)
 
@@ -27,7 +36,7 @@ func NewCmdEthEL(ctx context.Context) *cobra.Command {
 		Short: "Commands to interact with Ethereum execution layer node",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			ethELCtx.client, err = execclient.New(EthELConfigFromViper(v).SetDefault())
+			ethELCtx.client, err = newELClient(v)
 			return err
 		},
 	}
