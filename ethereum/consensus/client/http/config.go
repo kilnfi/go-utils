@@ -1,7 +1,7 @@
 package eth2http
 
 import (
-	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
+	kilnhttp "github.com/kilnfi/go-utils/net/http"
 )
 
 type Config struct {

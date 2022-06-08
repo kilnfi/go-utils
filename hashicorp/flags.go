@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	kilntls "github.com/skillz-blockchain/go-utils/crypto/tls"
-	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
+	kilntls "github.com/kilnfi/go-utils/crypto/tls"
+	kilnhttp "github.com/kilnfi/go-utils/net/http"
 )
 
 func VaultFlags(v *viper.Viper, f *pflag.FlagSet) {

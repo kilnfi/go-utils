@@ -9,9 +9,9 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/sirupsen/logrus"
 
-	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
-	httppreparer "github.com/skillz-blockchain/go-utils/net/http/preparer"
-	"github.com/skillz-blockchain/go-utils/net/jsonrpc"
+	kilnhttp "github.com/kilnfi/go-utils/net/http"
+	httppreparer "github.com/kilnfi/go-utils/net/http/preparer"
+	"github.com/kilnfi/go-utils/net/jsonrpc"
 )
 
 // Client allows to connect to a JSON-RPC server

@@ -8,7 +8,7 @@ import (
 	gethkeystore "github.com/ethereum/go-ethereum/accounts/keystore"
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	keystore "github.com/skillz-blockchain/go-utils/keystore"
+	keystore "github.com/kilnfi/go-utils/keystore"
 )
 
 type KeyStore struct {

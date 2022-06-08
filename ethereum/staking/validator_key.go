@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	_ "github.com/skillz-blockchain/go-utils/crypto/bls" // nolint
+	_ "github.com/kilnfi/go-utils/crypto/bls" // nolint
 	e2types "github.com/wealdtech/go-eth2-types/v2"
 	util "github.com/wealdtech/go-eth2-util"
 )

@@ -4,7 +4,7 @@ import (
 	"net"
 	"time"
 
-	kilntypes "github.com/skillz-blockchain/go-utils/common/types"
+	kilntypes "github.com/kilnfi/go-utils/common/types"
 )
 
 type DialerConfig struct {

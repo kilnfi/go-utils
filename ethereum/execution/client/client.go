@@ -11,10 +11,10 @@ import (
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/sirupsen/logrus"
 
-	"github.com/skillz-blockchain/go-utils/common/interfaces"
-	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
-	"github.com/skillz-blockchain/go-utils/net/jsonrpc"
-	jsonrpchttp "github.com/skillz-blockchain/go-utils/net/jsonrpc/http"
+	"github.com/kilnfi/go-utils/common/interfaces"
+	"github.com/kilnfi/go-utils/ethereum/execution/types"
+	"github.com/kilnfi/go-utils/net/jsonrpc"
+	jsonrpchttp "github.com/kilnfi/go-utils/net/jsonrpc/http"
 )
 
 // Client provides methods to interface with a JSON-RPC Ethereum 1.0 node

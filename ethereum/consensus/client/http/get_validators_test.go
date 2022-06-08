@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
-	httptestutils "github.com/skillz-blockchain/go-utils/net/http/testutils"
+	"github.com/kilnfi/go-utils/ethereum/consensus/types"
+	httptestutils "github.com/kilnfi/go-utils/net/http/testutils"
 )
 
 func TestGetValidators(t *testing.T) {

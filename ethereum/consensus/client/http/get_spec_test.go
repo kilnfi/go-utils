@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	httptestutils "github.com/kilnfi/go-utils/net/http/testutils"
 	"github.com/protolambda/zrnt/eth2/configs"
-	httptestutils "github.com/skillz-blockchain/go-utils/net/http/testutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
