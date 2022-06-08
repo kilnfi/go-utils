@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/skillz-blockchain/go-utils/keystore"
-	gethkeystore "github.com/skillz-blockchain/go-utils/keystore/geth"
+	"github.com/kilnfi/go-utils/keystore"
+	gethkeystore "github.com/kilnfi/go-utils/keystore/geth"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"

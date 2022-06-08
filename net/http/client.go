@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	kilntypes "github.com/skillz-blockchain/go-utils/common/types"
+	kilntypes "github.com/kilnfi/go-utils/common/types"
 )
 
 // Config for creating an HTTP Client

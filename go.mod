@@ -1,4 +1,4 @@
-module github.com/skillz-blockchain/go-utils
+module github.com/kilnfi/go-utils
 
 go 1.17
 

@@ -3,7 +3,7 @@ package flag
 import (
 	"math/big"
 
-	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
+	"github.com/kilnfi/go-utils/ethereum/execution/types"
 
 	"github.com/spf13/pflag"
 )

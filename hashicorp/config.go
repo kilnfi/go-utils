@@ -8,10 +8,10 @@ import (
 	"github.com/hashicorp/vault/api"
 	"golang.org/x/time/rate"
 
-	"github.com/skillz-blockchain/go-utils/common"
-	kilntypes "github.com/skillz-blockchain/go-utils/common/types"
-	kilntls "github.com/skillz-blockchain/go-utils/crypto/tls"
-	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
+	"github.com/kilnfi/go-utils/common"
+	kilntypes "github.com/kilnfi/go-utils/common/types"
+	kilntls "github.com/kilnfi/go-utils/crypto/tls"
+	kilnhttp "github.com/kilnfi/go-utils/net/http"
 )
 
 // ClientConfig object that be converted into an api.Config later

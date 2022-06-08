@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 
-	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
+	"github.com/kilnfi/go-utils/ethereum/consensus/types"
 )
 
 // GetCommittees returns the committees for the given state.

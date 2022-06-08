@@ -7,8 +7,8 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/sirupsen/logrus"
 
-	kilnhttp "github.com/skillz-blockchain/go-utils/net/http"
-	httppreparer "github.com/skillz-blockchain/go-utils/net/http/preparer"
+	kilnhttp "github.com/kilnfi/go-utils/net/http"
+	httppreparer "github.com/kilnfi/go-utils/net/http/preparer"
 )
 
 // Client provides methods to connect to an Ethereum 2.0 Beacon chain node

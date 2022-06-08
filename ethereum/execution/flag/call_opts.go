@@ -4,7 +4,7 @@ import (
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/pflag"
 
-	"github.com/skillz-blockchain/go-utils/ethereum/execution/types"
+	"github.com/kilnfi/go-utils/ethereum/execution/types"
 )
 
 // CallOptsVar registers a set of custom flags for eth1.CallOpts

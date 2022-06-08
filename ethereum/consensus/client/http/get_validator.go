@@ -6,7 +6,7 @@ import (
 
 	"github.com/Azure/go-autorest/autorest"
 
-	"github.com/skillz-blockchain/go-utils/ethereum/consensus/types"
+	"github.com/kilnfi/go-utils/ethereum/consensus/types"
 )
 
 // GetValidator returns validator specified by stateID and validatorID

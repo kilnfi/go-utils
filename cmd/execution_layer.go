@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	execclient "github.com/skillz-blockchain/go-utils/ethereum/execution/client"
-	jsonrpchttp "github.com/skillz-blockchain/go-utils/net/jsonrpc/http"
+	execclient "github.com/kilnfi/go-utils/ethereum/execution/client"
+	jsonrpchttp "github.com/kilnfi/go-utils/net/jsonrpc/http"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"

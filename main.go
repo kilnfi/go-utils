@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
+	"github.com/kilnfi/go-utils/cmd"
 	log "github.com/sirupsen/logrus"
-	"github.com/skillz-blockchain/go-utils/cmd"
 	"github.com/spf13/cobra"
 )
 

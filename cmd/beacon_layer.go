@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	consclient "github.com/kilnfi/go-utils/ethereum/consensus/client"
+	consclienthttp "github.com/kilnfi/go-utils/ethereum/consensus/client/http"
+	"github.com/kilnfi/go-utils/ethereum/consensus/flag"
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
-	consclient "github.com/skillz-blockchain/go-utils/ethereum/consensus/client"
-	consclienthttp "github.com/skillz-blockchain/go-utils/ethereum/consensus/client/http"
-	"github.com/skillz-blockchain/go-utils/ethereum/consensus/flag"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"

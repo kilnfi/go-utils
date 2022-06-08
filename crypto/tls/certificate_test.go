@@ -3,7 +3,7 @@ package crypto
 import (
 	"testing"
 
-	"github.com/skillz-blockchain/go-utils/crypto/tls/testutils"
+	"github.com/kilnfi/go-utils/crypto/tls/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
