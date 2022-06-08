@@ -17,5 +17,6 @@ type TransactOpts struct {
 	GasTipCap *big.Int // Gas priority fee cap to use for the 1559 transaction execution (nil = gas price oracle)
 	GasLimit  uint64   // Gas limit to set for the transaction execution (0 = estimate)
 
-	Send bool // Do all transact steps and send the transaction
+	NoSign bool // Do all transact steps and stops before signing
+	Send   bool // Do all transact steps and send the transaction (can not be true if NoSign is true)
 }
