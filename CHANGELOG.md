@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### v0.2.1 (June 8th 2022)
+
+### 🕹️ Others
+
+- [mod] Update module name
+
 ### v0.2.0 (June 8th 2022)
 
 ### :dizzy: Features
@@ -14,8 +20,6 @@
 
 - [eth2] Fix GetSpec
 
-### 🕹️ Others
-
 ## v0.1.0 (April 9th 2022)
 
 ### :dizzy: Features
@@ -25,8 +29,6 @@
 - [eth2] Add Eth2 client to connect to any Ethereum 2.0 beacon node over HTTP
 - [flag] Add a collection of Ethereum 1.0 & 2.0 flags compatible with [Cobra](https://github.com/spf13/cobra) library to build CLI applications
 - [csv] Add CSV store to manipulate data in CSV files
-
-### 🛠️ Bug fixes
 
 ### 🕹️ Others
 
