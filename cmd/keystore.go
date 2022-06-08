@@ -24,7 +24,7 @@ func NewCmdKeystore(
 	keystoreCtx := &keystoreContext{Context: ctx}
 
 	if newKeystore == nil {
-		newKeystore = func(v *viper.Viper) (keystore.Store, error) {
+		newKeystore = func(v *viper.Viper) (keystore.Store, error) { //nolint
 			return gethkeystore.New(KeystoreConfigFromViper(v).SetDefault()), nil
 		}
 	}
