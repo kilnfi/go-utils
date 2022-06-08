@@ -72,156 +72,16 @@ Expects either a decimal or an hex encoded value with 0x prefix`,
 		`Optional gas limit to set for the transaction execution. If not set then estimate gas
 Expects either a decimal or an hex encoded value with 0x prefix`,
 	)
-
-	// We want NoSend to be true by default
 	f.BoolVar(
 		&txOpts.Send,
 		"send",
 		false,
-		"If not set then performs all transaction steps but does not send the transaction",
+		"If set then performs all transaction steps and send the transaction to the network",
+	)
+	f.BoolVar(
+		&txOpts.NoSign,
+		"no-sign",
+		false,
+		"If set then performs all transaction steps and stop before signing the transaction",
 	)
 }
-
-// // txOptsNonceValue is a type implenting pflag.Value interface
-// type txOptsNonceValue struct {
-// 	txOpts *eth1.TransactOpts
-// }
-
-// func (v *txOptsNonceValue) Set(s string) error {
-// 	if s != "" {
-// 		n, err := eth1.DecodeBig(s)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		v.txOpts.Nonce = n
-// 	}
-
-// 	return nil
-// }
-
-// func (v *txOptsNonceValue) Type() string { return "string" }
-// func (v *txOptsNonceValue) String() string {
-// 	if v.txOpts.Nonce == nil {
-// 		return ""
-// 	}
-// 	return gethhexutil.EncodeBig(v.txOpts.Nonce)
-// }
-
-// // txOptsValueValue is a type implenting pflag.Value interface
-// type txOptsValueValue struct {
-// 	txOpts *eth1.TransactOpts
-// }
-
-// func (v *txOptsValueValue) Set(s string) error {
-// 	if s != "" {
-// 		val, err := eth1.DecodeBig(s)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		v.txOpts.Value = val
-// 	}
-
-// 	return nil
-// }
-
-// func (v *txOptsValueValue) Type() string { return "string" }
-// func (v *txOptsValueValue) String() string {
-// 	if v.txOpts.Value == nil {
-// 		return ""
-// 	}
-// 	return gethhexutil.EncodeBig(v.txOpts.Value)
-// }
-
-// // txOptsGasPriceValue is a type implenting pflag.Value interface
-// type txOptsGasPriceValue struct {
-// 	txOpts *eth1.TransactOpts
-// }
-
-// func (v *txOptsGasPriceValue) Set(s string) error {
-// 	if s != "" {
-// 		p, err := eth1.DecodeBig(s)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		v.txOpts.GasPrice = p
-// 	}
-
-// 	return nil
-// }
-
-// func (v *txOptsGasPriceValue) Type() string { return "string" }
-// func (v *txOptsGasPriceValue) String() string {
-// 	if v.txOpts.GasPrice == nil {
-// 		return ""
-// 	}
-// 	return gethhexutil.EncodeBig(v.txOpts.GasPrice)
-// }
-
-// type txOptsGasFeeCapValue struct {
-// 	txOpts *eth1.TransactOpts
-// }
-
-// func (v *txOptsGasFeeCapValue) Set(s string) error {
-// 	if s != "" {
-// 		p, err := eth1.DecodeBig(s)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		v.txOpts.GasFeeCap = p
-// 	}
-
-// 	return nil
-// }
-
-// func (v *txOptsGasFeeCapValue) Type() string { return "string" }
-// func (v *txOptsGasFeeCapValue) String() string {
-// 	if v.txOpts.GasFeeCap == nil {
-// 		return ""
-// 	}
-// 	return gethhexutil.EncodeBig(v.txOpts.GasFeeCap)
-// }
-
-// type txOptsGasTipCapValue struct {
-// 	txOpts *eth1.TransactOpts
-// }
-
-// func (v *txOptsGasTipCapValue) Set(s string) error {
-// 	if s != "" {
-// 		p, err := eth1.DecodeBig(s)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		v.txOpts.GasTipCap = p
-// 	}
-
-// 	return nil
-// }
-
-// func (v *txOptsGasTipCapValue) Type() string { return "string" }
-// func (v *txOptsGasTipCapValue) String() string {
-// 	if v.txOpts.GasTipCap == nil {
-// 		return ""
-// 	}
-// 	return gethhexutil.EncodeBig(v.txOpts.GasTipCap)
-// }
-
-// type txOptsGasLimitValue struct {
-// 	txOpts *eth1.TransactOpts
-// }
-
-// func (v *txOptsGasLimitValue) Set(s string) error {
-// 	if s != "" {
-// 		p, err := eth1.DecodeBig(s)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		v.txOpts.GasLimit = p.Uint64()
-// 	}
-
-// 	return nil
-// }
-
-// func (v *txOptsGasLimitValue) Type() string { return "string" }
-// func (v *txOptsGasLimitValue) String() string {
-// 	return gethhexutil.EncodeBig(big.NewInt(int64(v.txOpts.GasLimit)))
-// }
