@@ -1,4 +1,20 @@
-# Go-utils changelog
+# CHANGELOG
+
+### v0.2.0 (June 8th 2022)
+
+### :dizzy: Features
+
+- [cmd] Add Cobra commands
+- [eth] Refactor ethereum naming from Eth 1 & 2 to execution & consensus layers
+- [http] Add various utilities for HTTP
+- [hashicorp] Add various utilities for accessing Hashicorp Vault
+- [log] Add various utilities aroung logging
+
+### 🛠️ Bug fixes
+
+- [eth2] Fix GetSpec
+
+### 🕹️ Others
 
 ## v0.1.0 (April 9th 2022)
 
