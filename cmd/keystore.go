@@ -45,6 +45,7 @@ func NewCmdKeystore(
 	KeystoreFlag(v, cmds.PersistentFlags())
 
 	cmds.AddCommand(newCmdGenerateEth1Key(keystoreCtx))
+	cmds.AddCommand(newCmdImportEth1Key(keystoreCtx))
 
 	return cmds
 }
@@ -57,6 +58,25 @@ func newCmdGenerateEth1Key(ctx *keystoreContext) *cobra.Command {
 			return ctx.keys.CreateAccount(ctx)
 		}),
 	}
+
+	return cmd
+}
+
+func newCmdImportEth1Key(ctx *keystoreContext) *cobra.Command {
+	var (
+		pkey string
+	)
+
+	cmd := &cobra.Command{
+		Use:   "import",
+		Short: "Import the given private key",
+		RunE: PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
+			return ctx.keys.Import(ctx, pkey)
+		}),
+	}
+
+	cmd.Flags().StringVar(&pkey, "priv-key", "", "secp256k1 private key (in hexadecimal format)")
+	_ = cmd.MarkFlagRequired("priv-key")
 
 	return cmd
 }

@@ -8,6 +8,7 @@ import (
 	gethkeystore "github.com/ethereum/go-ethereum/accounts/keystore"
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	gethcrypto "github.com/ethereum/go-ethereum/crypto"
 	keystore "github.com/kilnfi/go-utils/keystore"
 )
 
@@ -25,6 +26,24 @@ func New(cfg *Config) *KeyStore {
 
 func (s *KeyStore) CreateAccount(_ context.Context) (*keystore.Account, error) {
 	acc, err := s.keys.NewAccount(s.cfg.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &keystore.Account{
+		Addr: acc.Address,
+		URL:  acc.URL,
+	}, nil
+}
+
+// Import a secp256k1 private key in hexadecimal format
+func (s *KeyStore) Import(_ context.Context, hexkey string) (*keystore.Account, error) {
+	priv, err := gethcrypto.HexToECDSA(hexkey)
+	if err != nil {
+		return nil, err
+	}
+
+	acc, err := s.keys.ImportECDSA(priv, s.cfg.Password)
 	if err != nil {
 		return nil, err
 	}
