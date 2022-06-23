@@ -17,4 +17,5 @@ type Account struct {
 type Store interface {
 	CreateAccount(context.Context) (*Account, error)
 	SignTx(ctx context.Context, addr gethcommon.Address, tx *gethtypes.Transaction, chainID *big.Int) (*gethtypes.Transaction, error)
+	Import(ctx context.Context, hexkey string) (*Account, error)
 }

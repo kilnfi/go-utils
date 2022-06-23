@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### v0.2.2 (*Unreleased*)
+
+### :dizzy: Features
+
+- [cmd/keystore] Add command to import keys
+
 ### v0.2.1 (June 8th 2022)
 
 ### 🕹️ Others
