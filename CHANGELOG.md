@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### v0.2.2 (*Unreleased*)
+### v0.2.2 (June 23rd 2022)
 
 ### :dizzy: Features
 
