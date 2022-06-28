@@ -105,18 +105,18 @@ func (data *DepositData) SigningRoot() beaconcommon.Root {
 	)
 }
 
-func (data *DepositData) MarshalJSON() ([]byte, error) {
-	type depositData struct {
-		Pubkey                beaconcommon.BLSPubkey    `json:"pubkey"`
-		WithdrawalCredentials beaconcommon.Root         `json:"withdrawal_credentials"`
-		Amount                beaconcommon.Gwei         `json:"amount"`
-		Signature             beaconcommon.BLSSignature `json:"signature"`
-		Version               beaconcommon.Version      `json:"fork_version"`
-		DepositMessageRoot    beaconcommon.Root         `json:"deposit_message_root"`
-		DepositDataRoot       beaconcommon.Root         `json:"deposit_data_root"`
-	}
+type jsonDepositData struct {
+	Pubkey                beaconcommon.BLSPubkey    `json:"pubkey"`
+	WithdrawalCredentials beaconcommon.Root         `json:"withdrawal_credentials"`
+	Amount                beaconcommon.Gwei         `json:"amount"`
+	Signature             beaconcommon.BLSSignature `json:"signature"`
+	Version               beaconcommon.Version      `json:"fork_version"`
+	DepositMessageRoot    beaconcommon.Root         `json:"deposit_message_root"`
+	DepositDataRoot       beaconcommon.Root         `json:"deposit_data_root"`
+}
 
-	d := &depositData{
+func (data *DepositData) MarshalJSON() ([]byte, error) {
+	d := &jsonDepositData{
 		Pubkey:                data.Pubkey,
 		WithdrawalCredentials: data.WithdrawalCredentials,
 		Amount:                data.Amount,
@@ -127,6 +127,22 @@ func (data *DepositData) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(d)
+}
+
+func (data *DepositData) UnmarshalJSON(b []byte) error {
+	d := new(jsonDepositData)
+	err := json.Unmarshal(b, d)
+	if err != nil {
+		return nil
+	}
+
+	data.Pubkey = d.Pubkey
+	data.WithdrawalCredentials = d.WithdrawalCredentials
+	data.Amount = d.Amount
+	data.Signature = d.Signature
+	data.Version = d.Version
+
+	return nil
 }
 
 // Return the bls domain for deposit
