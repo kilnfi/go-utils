@@ -1,5 +1,15 @@
 # CHANGELOG
 
+### v0.2.3 (June 28th 2022)
+
+### :dizzy: Features
+
+- [eth/staking] Add method to verify DepositData
+
+### 🛠️ Bug fixes
+
+- [keystore] Update SignTx to return an error if key is missing
+
 ### v0.2.2 (June 23rd 2022)
 
 ### :dizzy: Features
