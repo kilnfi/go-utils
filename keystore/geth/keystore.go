@@ -2,6 +2,7 @@ package gethkeystore
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 
 	gethaccounts "github.com/ethereum/go-ethereum/accounts"
@@ -55,6 +56,9 @@ func (s *KeyStore) Import(_ context.Context, hexkey string) (*keystore.Account, 
 }
 
 func (s *KeyStore) SignTx(_ context.Context, addr gethcommon.Address, tx *gethtypes.Transaction, chainID *big.Int) (*gethtypes.Transaction, error) {
+	if !s.keys.HasAddress(addr) {
+		return nil, fmt.Errorf("no key for address %q", addr.String())
+	}
 	return s.keys.SignTxWithPassphrase(
 		gethaccounts.Account{Address: addr},
 		s.cfg.Password,
