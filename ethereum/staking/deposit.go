@@ -3,15 +3,106 @@ package staking
 import (
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 	"github.com/protolambda/ztyp/tree"
+	e2types "github.com/wealdtech/go-eth2-types/v2"
 )
 
 type DepositData struct {
 	*beaconcommon.DepositData
 
 	Version beaconcommon.Version
+}
+
+// NewDepositData creates a DepositData object
+func NewDepositData(
+	pubkey []byte,
+	withdrawalCredentials beaconcommon.Root,
+	amount beaconcommon.Gwei,
+	version beaconcommon.Version,
+) (*DepositData, error) {
+	pubKey := new(beaconcommon.BLSPubkey)
+	err := pubKey.UnmarshalText(pubkey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &DepositData{
+		DepositData: &beaconcommon.DepositData{
+			Pubkey:                *pubKey,
+			WithdrawalCredentials: withdrawalCredentials,
+			Amount:                amount,
+		},
+		Version: version,
+	}, nil
+}
+
+func (data *DepositData) Sign(
+	vkey *ValidatorKey,
+) (*DepositData, error) {
+	if len(data.Pubkey) == 0 {
+		pubKey := new(beaconcommon.BLSPubkey)
+		err := pubKey.UnmarshalText(vkey.PrivKey.PublicKey().Marshal())
+		if err != nil {
+			return nil, err
+		}
+		data.Pubkey = *pubKey
+	} else if "0x"+hex.EncodeToString(vkey.PrivKey.PublicKey().Marshal()) != data.Pubkey.String() {
+		return nil, fmt.Errorf("signing keys does not match data public key")
+	}
+
+	// Sign DepositMessage root
+	sig, err := sign(vkey, data.SigningRoot())
+	if err != nil {
+		return nil, err
+	}
+
+	data.Signature = *sig
+
+	return data, nil
+}
+
+func sign(vkey *ValidatorKey, root beaconcommon.Root) (*beaconcommon.BLSSignature, error) {
+	// Sign DepositMessage root
+	sigHexBytes := vkey.PrivKey.Sign(
+		root[:],
+	).Marshal()
+
+	sigBytes := make([]byte, 2*len(sigHexBytes))
+	_ = hex.Encode(sigBytes, sigHexBytes)
+
+	sig := new(beaconcommon.BLSSignature)
+	err := sig.UnmarshalText(sigBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return sig, err
+}
+
+func (data *DepositData) VerifySignature() (bool, error) {
+	sig, err := e2types.BLSSignatureFromBytes(data.Signature[:])
+	if err != nil {
+		return false, err
+	}
+
+	pubkey, err := e2types.BLSPublicKeyFromBytes(data.Pubkey[:])
+	if err != nil {
+		return false, err
+	}
+
+	root := data.SigningRoot()
+	return sig.Verify(root[:], pubkey), nil
+}
+
+// Compute DepositMessage root to be signed
+func (data *DepositData) SigningRoot() beaconcommon.Root {
+	return beaconcommon.ComputeSigningRoot(
+		data.MessageRoot(),
+		DepositDomain(data.Version),
+	)
 }
 
 func (data *DepositData) MarshalJSON() ([]byte, error) {
@@ -38,66 +129,11 @@ func (data *DepositData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(d)
 }
 
-func ComputeDepositData(
-	vkey *ValidatorKey,
-	withdrawalCredentials beaconcommon.Root,
-	amount beaconcommon.Gwei,
-	version beaconcommon.Version,
-) (*DepositData, error) {
-	// Initialize DepositData
-	pubKey := new(beaconcommon.BLSPubkey)
-	err := pubKey.UnmarshalText([]byte(vkey.Pubkey))
-	if err != nil {
-		return nil, err
-	}
-
-	depositData := &beaconcommon.DepositData{
-		Pubkey:                *pubKey,
-		WithdrawalCredentials: withdrawalCredentials,
-		Amount:                amount,
-	}
-
-	// Compute domain for deposit
-	dom := beaconcommon.ComputeDomain(
+// Return the bls domain for deposit
+func DepositDomain(version beaconcommon.Version) beaconcommon.BLSDomain {
+	return beaconcommon.ComputeDomain(
 		beaconcommon.DOMAIN_DEPOSIT,
 		version,
 		beaconcommon.Root{},
 	)
-
-	// Compute DepositMessage root to be signed
-	depositMsgRoot := beaconcommon.ComputeSigningRoot(
-		depositData.MessageRoot(),
-		dom,
-	)
-
-	// Sign DepositMessage root
-	sig, err := sign(vkey, depositMsgRoot)
-	if err != nil {
-		return nil, err
-	}
-
-	depositData.Signature = *sig
-
-	return &DepositData{
-		DepositData: depositData,
-		Version:     version,
-	}, nil
-}
-
-func sign(vkey *ValidatorKey, root beaconcommon.Root) (*beaconcommon.BLSSignature, error) {
-	// Sign DepositMessage root
-	sigHexBytes := vkey.PrivKey.Sign(
-		root[:],
-	).Marshal()
-
-	sigBytes := make([]byte, 2*len(sigHexBytes))
-	_ = hex.Encode(sigBytes, sigHexBytes)
-
-	sig := new(beaconcommon.BLSSignature)
-	err := sig.UnmarshalText(sigBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	return sig, err
 }
