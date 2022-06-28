@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### v0.2.4 (June 28th 2022)
+
+This is an empty release
+
 ### v0.2.3 (June 28th 2022)
 
 ### :dizzy: Features
