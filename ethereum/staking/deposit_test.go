@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestComputeDepositData(t *testing.T) {
+func TestComputeAndVerifyDepositData(t *testing.T) {
 	vkeys, err := GenerateValidatorKeys(
 		"zebra sight furnace type elder speak spy beach parent snack million puppy mobile royal ski walnut awful dry culture orphan tourist throw expire shock",
 		"",
@@ -63,12 +63,15 @@ func TestComputeDepositData(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("#%v", i), func(t *testing.T) {
-			depositData, err := ComputeDepositData(
-				tt.vkey,
+			depositData, err := NewDepositData(
+				[]byte(tt.vkey.Pubkey),
 				*withdrawalCreds,
 				tt.amount,
 				tt.version,
 			)
+			require.NoError(t, err)
+
+			depositData, err = depositData.Sign(tt.vkey)
 			require.NoError(t, err)
 
 			assert.Equal(t, fmt.Sprintf("0x%v", tt.vkey.Pubkey), depositData.Pubkey.String())
@@ -79,6 +82,10 @@ func TestComputeDepositData(t *testing.T) {
 				tt.expectedSignature,
 				depositData.Signature.String(),
 			)
+
+			isValid, err := depositData.VerifySignature()
+			require.NoError(t, err)
+			assert.True(t, isValid)
 		})
 	}
 
