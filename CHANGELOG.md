@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### v0.2.5 (July 4th 2022)
+
+### 🛠️ Bug fixes
+
+- [eth/staking] Fix unmarshal/marshal of DepositData
+
 ### v0.2.4 (June 28th 2022)
 
 This is an empty release
