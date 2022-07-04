@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### v0.2.7 (July 4th 2022)
+
+### 🛠️ Bug fixes
+
+- [eth/staking] Add validation on unmarshal of DepositData
+
 ### v0.2.6 (July 4th 2022)
 
 ### 🛠️ Bug fixes
