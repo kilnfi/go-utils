@@ -6,7 +6,7 @@ var (
 	MainnetChainID = "1"
 	RopstenChainID = "3"
 	GoerliChainID  = "5"
-	SepoliaChainID = "5"
+	SepoliaChainID = "11155111"
 )
 
 var chainIds = map[string]string{
