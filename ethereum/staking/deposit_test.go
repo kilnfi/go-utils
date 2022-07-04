@@ -1,7 +1,9 @@
 package staking
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"testing"
 
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
@@ -9,7 +11,42 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestComputeAndVerifyDepositData(t *testing.T) {
+func TestDepositDataMarshalUnmarshal(t *testing.T) {
+	var datas []*DepositData
+	f, err := os.Open("testdata/deposit_data.json")
+	require.NoError(t, err, "Open")
+
+	err = json.NewDecoder(f).Decode(&datas)
+	require.NoError(t, err, "Decode")
+
+	_, err = json.Marshal(datas)
+	require.NoError(t, err, "Marshal")
+}
+
+// newDepositData creates a DepositData object
+func newDepositData(
+	pubkey []byte,
+	withdrawalCredentials beaconcommon.Root,
+	amount beaconcommon.Gwei,
+	version beaconcommon.Version,
+) (*DepositData, error) {
+	pubKey := new(beaconcommon.BLSPubkey)
+	err := pubKey.UnmarshalText(pubkey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &DepositData{
+		DepositData: beaconcommon.DepositData{
+			Pubkey:                *pubKey,
+			WithdrawalCredentials: withdrawalCredentials,
+			Amount:                amount,
+		},
+		Version: version,
+	}, nil
+}
+
+func TestDepositDataSignAndVerifySignature(t *testing.T) {
 	vkeys, err := GenerateValidatorKeys(
 		"zebra sight furnace type elder speak spy beach parent snack million puppy mobile royal ski walnut awful dry culture orphan tourist throw expire shock",
 		"",
@@ -63,7 +100,7 @@ func TestComputeAndVerifyDepositData(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("#%v", i), func(t *testing.T) {
-			depositData, err := NewDepositData(
+			depositData, err := newDepositData(
 				[]byte(tt.vkey.Pubkey),
 				*withdrawalCreds,
 				tt.amount,

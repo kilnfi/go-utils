@@ -5,38 +5,21 @@ import (
 	"encoding/json"
 	"fmt"
 
+	ethcl "github.com/kilnfi/go-utils/ethereum/consensus"
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 	"github.com/protolambda/ztyp/tree"
 	e2types "github.com/wealdtech/go-eth2-types/v2"
 )
 
 type DepositData struct {
-	*beaconcommon.DepositData
+	beaconcommon.DepositData
 
 	Version beaconcommon.Version
 }
 
-// NewDepositData creates a DepositData object
-func NewDepositData(
-	pubkey []byte,
-	withdrawalCredentials beaconcommon.Root,
-	amount beaconcommon.Gwei,
-	version beaconcommon.Version,
-) (*DepositData, error) {
-	pubKey := new(beaconcommon.BLSPubkey)
-	err := pubKey.UnmarshalText(pubkey)
-	if err != nil {
-		return nil, err
-	}
-
-	return &DepositData{
-		DepositData: &beaconcommon.DepositData{
-			Pubkey:                *pubKey,
-			WithdrawalCredentials: withdrawalCredentials,
-			Amount:                amount,
-		},
-		Version: version,
-	}, nil
+func (data *DepositData) Network() string {
+	n, _ := ethcl.Network(data.Version)
+	return n
 }
 
 func (data *DepositData) Sign(
@@ -111,6 +94,7 @@ type jsonDepositData struct {
 	Amount                beaconcommon.Gwei         `json:"amount"`
 	Signature             beaconcommon.BLSSignature `json:"signature"`
 	Version               beaconcommon.Version      `json:"fork_version"`
+	Network               string                    `json:"network_name,omitempty"`
 	DepositMessageRoot    beaconcommon.Root         `json:"deposit_message_root"`
 	DepositDataRoot       beaconcommon.Root         `json:"deposit_data_root"`
 }
@@ -122,6 +106,7 @@ func (data *DepositData) MarshalJSON() ([]byte, error) {
 		Amount:                data.Amount,
 		Signature:             data.Signature,
 		Version:               data.Version,
+		Network:               data.Network(),
 		DepositMessageRoot:    data.DepositData.MessageRoot(),
 		DepositDataRoot:       data.DepositData.HashTreeRoot(tree.GetHashFn()),
 	}
@@ -133,14 +118,19 @@ func (data *DepositData) UnmarshalJSON(b []byte) error {
 	d := new(jsonDepositData)
 	err := json.Unmarshal(b, d)
 	if err != nil {
-		return nil
+		return err
 	}
+
+	fmt.Printf("Piou %v\n", d)
+	fmt.Printf("Piou %v\n", data)
 
 	data.Pubkey = d.Pubkey
 	data.WithdrawalCredentials = d.WithdrawalCredentials
 	data.Amount = d.Amount
 	data.Signature = d.Signature
 	data.Version = d.Version
+
+	fmt.Printf("Piou unmarshaled\n")
 
 	return nil
 }
