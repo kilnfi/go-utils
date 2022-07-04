@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### v0.2.6 (July 4th 2022)
+
+### 🛠️ Bug fixes
+
+- [eth/exec] Fix sepolia chain id
+
 ### v0.2.5 (July 4th 2022)
 
 ### 🛠️ Bug fixes
