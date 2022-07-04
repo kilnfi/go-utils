@@ -121,16 +121,11 @@ func (data *DepositData) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	fmt.Printf("Piou %v\n", d)
-	fmt.Printf("Piou %v\n", data)
-
 	data.Pubkey = d.Pubkey
 	data.WithdrawalCredentials = d.WithdrawalCredentials
 	data.Amount = d.Amount
 	data.Signature = d.Signature
 	data.Version = d.Version
-
-	fmt.Printf("Piou unmarshaled\n")
 
 	return nil
 }
