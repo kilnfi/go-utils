@@ -127,6 +127,15 @@ func (data *DepositData) UnmarshalJSON(b []byte) error {
 	data.Signature = d.Signature
 	data.Version = d.Version
 
+	// Validates `deposit_message_root` and `deposit_data_root`
+	if (d.DepositMessageRoot != beaconcommon.Root{}) && (d.DepositMessageRoot != data.MessageRoot()) {
+		return fmt.Errorf("invalid `deposit_message_root` for `deposit_data`")
+	}
+
+	if (d.DepositDataRoot != beaconcommon.Root{}) && (d.DepositDataRoot != data.HashTreeRoot(tree.GetHashFn())) {
+		return fmt.Errorf("invalid `deposit_data_root` for `deposit_data`")
+	}
+
 	return nil
 }
 

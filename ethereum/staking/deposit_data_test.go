@@ -23,6 +23,45 @@ func TestDepositDataMarshalUnmarshal(t *testing.T) {
 	require.NoError(t, err, "Marshal")
 }
 
+func TestInvalidDepositDataMarshalUnmarshal(t *testing.T) {
+	tests := []struct {
+		desc string
+		raw  []byte
+	}{
+		{
+			desc: "invalid deposit_message_root",
+			raw: []byte(`{
+	"pubkey":"9161cc71f1f70a2a251fe7e820ec288fc47e23ed4d364ddd6728f1a4a742556082b32024942d9d5abb5d1b335e51dd44",
+	"withdrawal_credentials":"0008bd79b392ab5a5ebab2be87ffd37d9ee4f4c14a04001ce268d135f4435f4a",
+	"amount":32000000000,
+	"signature":"93c08b211bd2419847b08be6462a80730c3c00d1dc19483010247357bbaffdb8a5189d4a3acd7c3f2b72e1aa48b40eb315950f5f34c02206b06b146db5aeb93fafad904bee3b3a0d73a8e0346cbb8b9fe2fef17738527beaeb7d6f7f7d0d8bf6",
+	"deposit_message_root":"050d2a5175866a78ad51c601ca26fbb1a9bed708dd71896ac7f9641935035ff9",
+	"deposit_data_root":"bc6d383f5255e7c0b291fcc2fba2fb617bf55fde2c6dcf9aa1f8de4648b1a514",
+	"fork_version":"00001020",
+}`),
+		},
+		{
+			desc: "invalid deposit_data_root",
+			raw: []byte(`{
+	"pubkey":"9161cc71f1f70a2a251fe7e820ec288fc47e23ed4d364ddd6728f1a4a742556082b32024942d9d5abb5d1b335e51dd44",
+	"withdrawal_credentials":"0008bd79b392ab5a5ebab2be87ffd37d9ee4f4c14a04001ce268d135f4435f4a",
+	"amount":32000000000,
+	"signature":"93c08b211bd2419847b08be6462a80730c3c00d1dc19483010247357bbaffdb8a5189d4a3acd7c3f2b72e1aa48b40eb315950f5f34c02206b06b146db5aeb93fafad904bee3b3a0d73a8e0346cbb8b9fe2fef17738527beaeb7d6f7f7d0d8bf6",
+	"deposit_message_root":"aae1f11b1cdc047d494959441cabc7db49b1da0180f4f5219e9460ed269d9669",
+	"deposit_data_root":"bdd8a5186ba7c9b01c23cb40291bf645d5ce2120d5bfe4b34ac88cc60caa06e7",
+	"fork_version":"00001020",
+}`),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			err := json.Unmarshal(tt.raw, new(DepositData))
+			assert.Error(t, err)
+		})
+	}
+}
+
 // newDepositData creates a DepositData object
 func newDepositData(
 	pubkey []byte,

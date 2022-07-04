@@ -53,6 +53,23 @@
        "fork_version":"00001020",
        "network_name":"prater",
        "deposit_cli_version":"2.0.0"
-    }
+    },
+    {
+      "pubkey":"813b491c76ebdc3787272f91bed0ad55bdaf362aa460c8a0bb413553a8a7a7be061b0007c37a47080aa732df267b8c3e",
+      "withdrawal_credentials":"005782ba1f0435c8e8b5f5f53b44f224076de11dcfe3fafafc438d00206848db",
+      "amount":32000000000,
+      "signature":"98c7b116d9c4f3869714182bddd5542884dc4763865569a7fd664fafed4dfe4afe058fbd3fdde686996049f8e1c8d98b0cc69465085d461b4395fe8071678e267499713597c2b0340c155e66c07339aa450a4f7faa5d8ef23dc5cb196401a62d",
+      "fork_version":"00001020",
+      "network_name":"prater",
+      "deposit_cli_version":"2.0.0"
+   },
+   {
+      "pubkey":"813b491c76ebdc3787272f91bed0ad55bdaf362aa460c8a0bb413553a8a7a7be061b0007c37a47080aa732df267b8c3e",
+      "withdrawal_credentials":"005782ba1f0435c8e8b5f5f53b44f224076de11dcfe3fafafc438d00206848db",
+      "amount":32000000000,
+      "fork_version":"00001020",
+      "network_name":"prater",
+      "deposit_cli_version":"2.0.0"
+   }
  ]
  
