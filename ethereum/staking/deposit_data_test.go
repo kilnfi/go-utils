@@ -164,5 +164,130 @@ func TestDepositDataSignAndVerifySignature(t *testing.T) {
 			assert.True(t, isValid)
 		})
 	}
+}
 
+func TestValidateDepositData(t *testing.T) {
+	withdrawalCreds := new(beaconcommon.Root)
+	err := json.Unmarshal(
+		[]byte(`"00ba9a5425d1bb1d6af8223664da5ff39ca2ff110f917a2b0dc73b8f206f28a4"`),
+		withdrawalCreds,
+	)
+	require.NoError(t, err)
+
+	var tests = []struct {
+		desc string
+
+		raw             []byte
+		withdrawalCreds beaconcommon.Root
+		version         beaconcommon.Version
+		amount          beaconcommon.Gwei
+
+		expectedErr error
+	}{
+		{
+			desc:            "all fields - valid",
+			version:         beaconcommon.Version{0x00, 0x00, 0x00, 0x00},
+			withdrawalCreds: *withdrawalCreds,
+			amount:          beaconcommon.Gwei(32000000000),
+			raw: []byte(`{
+				"pubkey": "8ab1ee15397f8686d946a84479f58b16ea791a7817e923bc8567e6782f6797ca486b27bfbf1ae4f23d02d5aa54f1b021", 
+				"withdrawal_credentials": "00ba9a5425d1bb1d6af8223664da5ff39ca2ff110f917a2b0dc73b8f206f28a4", 
+				"amount": 32000000000, 
+				"signature": "abe8918b786effebb667e592ef43790b83f54fe4fcc6163f03d1fdb08ff4a75ed67d804659bb4adb44605d00dafa7b910b294e815c6e19166457ee9c22dab6b5fcbc6fd092617e8f3b0a462831cfdda0560fc006569b28d76b5efbd226139674",  
+				"fork_version": "00000000", 
+				"network_name": "mainnet"
+			}`),
+		},
+		{
+			desc:            "only pubkey and signature - valid",
+			version:         beaconcommon.Version{0x00, 0x00, 0x00, 0x00},
+			withdrawalCreds: *withdrawalCreds,
+			amount:          beaconcommon.Gwei(32000000000),
+			raw: []byte(`{
+				"pubkey": "8ab1ee15397f8686d946a84479f58b16ea791a7817e923bc8567e6782f6797ca486b27bfbf1ae4f23d02d5aa54f1b021", 
+				"signature": "abe8918b786effebb667e592ef43790b83f54fe4fcc6163f03d1fdb08ff4a75ed67d804659bb4adb44605d00dafa7b910b294e815c6e19166457ee9c22dab6b5fcbc6fd092617e8f3b0a462831cfdda0560fc006569b28d76b5efbd226139674" 
+			}`),
+		},
+		{
+			desc:            "all fields - invalid withdrawal credentials",
+			version:         beaconcommon.Version{0x00, 0x00, 0x00, 0x00},
+			withdrawalCreds: *withdrawalCreds,
+			amount:          beaconcommon.Gwei(32000000000),
+			raw: []byte(`{
+				"pubkey": "8ab1ee15397f8686d946a84479f58b16ea791a7817e923bc8567e6782f6797ca486b27bfbf1ae4f23d02d5aa54f1b021", 
+				"withdrawal_credentials": "00c363f07c4ba0ec792081858d6756497d69682990a9f84a27622b2887bd2c3c", 
+				"amount": 32000000000, 
+				"signature": "abe8918b786effebb667e592ef43790b83f54fe4fcc6163f03d1fdb08ff4a75ed67d804659bb4adb44605d00dafa7b910b294e815c6e19166457ee9c22dab6b5fcbc6fd092617e8f3b0a462831cfdda0560fc006569b28d76b5efbd226139674",  
+				"fork_version": "00000000", 
+				"network_name": "mainnet"
+			}`),
+			expectedErr: fmt.Errorf("invalid `withdrawal_credentials` 0x00c363f07c4ba0ec792081858d6756497d69682990a9f84a27622b2887bd2c3c at pos 0 (expected 0x00ba9a5425d1bb1d6af8223664da5ff39ca2ff110f917a2b0dc73b8f206f28a4)"),
+		},
+		{
+			desc:            "all fields - invalid version",
+			version:         beaconcommon.Version{0x10, 0x00, 0x00, 0x20},
+			withdrawalCreds: *withdrawalCreds,
+			amount:          beaconcommon.Gwei(32000000000),
+			raw: []byte(`{
+				"pubkey": "8ab1ee15397f8686d946a84479f58b16ea791a7817e923bc8567e6782f6797ca486b27bfbf1ae4f23d02d5aa54f1b021", 
+				"withdrawal_credentials": "00ba9a5425d1bb1d6af8223664da5ff39ca2ff110f917a2b0dc73b8f206f28a4", 
+				"amount": 32000000000, 
+				"signature": "abe8918b786effebb667e592ef43790b83f54fe4fcc6163f03d1fdb08ff4a75ed67d804659bb4adb44605d00dafa7b910b294e815c6e19166457ee9c22dab6b5fcbc6fd092617e8f3b0a462831cfdda0560fc006569b28d76b5efbd226139674",  
+				"fork_version": "00000000", 
+				"network_name": "mainnet"
+			}`),
+			expectedErr: fmt.Errorf("invalid `fork_version` 0x00000000 at pos 0 (expected 0x10000020)"),
+		},
+		{
+			desc:            "all fields - invalid amount",
+			version:         beaconcommon.Version{0x00, 0x00, 0x00, 0x00},
+			withdrawalCreds: *withdrawalCreds,
+			amount:          beaconcommon.Gwei(16000000000),
+			raw: []byte(`{
+				"pubkey": "8ab1ee15397f8686d946a84479f58b16ea791a7817e923bc8567e6782f6797ca486b27bfbf1ae4f23d02d5aa54f1b021", 
+				"withdrawal_credentials": "00ba9a5425d1bb1d6af8223664da5ff39ca2ff110f917a2b0dc73b8f206f28a4", 
+				"amount": 32000000000, 
+				"signature": "abe8918b786effebb667e592ef43790b83f54fe4fcc6163f03d1fdb08ff4a75ed67d804659bb4adb44605d00dafa7b910b294e815c6e19166457ee9c22dab6b5fcbc6fd092617e8f3b0a462831cfdda0560fc006569b28d76b5efbd226139674",  
+				"fork_version": "00000000", 
+				"network_name": "mainnet"
+			}`),
+			expectedErr: fmt.Errorf("invalid `amount` 32000000000 at pos 0 (expected 16000000000)"),
+		},
+		{
+			desc:            "all fields - invalid signature",
+			version:         beaconcommon.Version{0x00, 0x00, 0x00, 0x00},
+			withdrawalCreds: *withdrawalCreds,
+			amount:          beaconcommon.Gwei(32000000000),
+			raw: []byte(`{
+				"pubkey": "8ab1ee15397f8686d946a84479f58b16ea791a7817e923bc8567e6782f6797ca486b27bfbf1ae4f23d02d5aa54f1b021", 
+				"withdrawal_credentials": "00ba9a5425d1bb1d6af8223664da5ff39ca2ff110f917a2b0dc73b8f206f28a4", 
+				"amount": 32000000000, 
+				"signature": "ae6e6a8b2ca8988a870e0ce9f4feff916e0c3bcae32ace785e24ea0b4e2a896c152e12a15405df7caeff7694fa993106025e787ebc9faec11b2ab4a1da1ef4268819606f08dfb78151cd900c82e0c119db8c07d7ee04cf2efe3aaccbfc2ec4a8",  
+				"fork_version": "00000000", 
+				"network_name": "mainnet"
+			}`),
+			expectedErr: fmt.Errorf("invalid `signature` for `pubkey` at pos 0"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			data := new(DepositData)
+			err := json.Unmarshal(tt.raw, data)
+			require.NoError(t, err)
+
+			err = ValidateDepositData(
+				tt.withdrawalCreds,
+				tt.version,
+				tt.amount,
+				data,
+			)
+			if tt.expectedErr == nil {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+				assert.Equal(t, tt.expectedErr.Error(), err.Error())
+			}
+		})
+	}
 }
