@@ -155,23 +155,25 @@ func ValidateDepositData(
 	datas ...*DepositData,
 ) error {
 	for i, data := range datas {
-		if (data.WithdrawalCredentials == beaconcommon.Root{}) {
-			data.WithdrawalCredentials = expectedCreds
-		} else if data.WithdrawalCredentials != expectedCreds {
-			return fmt.Errorf("invalid `withdrawal_credentials` %v at pos %v (expected %v)", data.WithdrawalCredentials, i, expectedCreds)
+		tmpData := new(DepositData)
+		*tmpData = *data
+		if (tmpData.WithdrawalCredentials == beaconcommon.Root{}) {
+			tmpData.WithdrawalCredentials = expectedCreds
+		} else if tmpData.WithdrawalCredentials != expectedCreds {
+			return fmt.Errorf("invalid `withdrawal_credentials` %v at pos %v (expected %v)", tmpData.WithdrawalCredentials, i, expectedCreds)
 		}
 
-		if data.Version != expectedVersion {
+		if tmpData.Version != expectedVersion {
 			return fmt.Errorf("invalid `fork_version` %v at pos %v (expected %v)", data.Version, i, expectedVersion)
 		}
 
-		if data.Amount == beaconcommon.Gwei(0) {
-			data.Amount = expectedAmount
-		} else if data.Amount != expectedAmount {
-			return fmt.Errorf("invalid `amount` %v at pos %v (expected %v)", data.Amount, i, expectedAmount)
+		if tmpData.Amount == beaconcommon.Gwei(0) {
+			tmpData.Amount = expectedAmount
+		} else if tmpData.Amount != expectedAmount {
+			return fmt.Errorf("invalid `amount` %v at pos %v (expected %v)", tmpData.Amount, i, expectedAmount)
 		}
 
-		valid, err := data.VerifySignature()
+		valid, err := tmpData.VerifySignature()
 		if err != nil {
 			return err
 		}

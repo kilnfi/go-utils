@@ -268,6 +268,17 @@ func TestValidateDepositData(t *testing.T) {
 			}`),
 			expectedErr: fmt.Errorf("invalid `signature` for `pubkey` at pos 0"),
 		},
+		{
+			desc:            "only pubkey and signature - invalid signature",
+			version:         beaconcommon.Version{0x00, 0x00, 0x00, 0x00},
+			withdrawalCreds: *withdrawalCreds,
+			amount:          beaconcommon.Gwei(32000000000),
+			raw: []byte(`{
+				"pubkey": "8ab1ee15397f8686d946a84479f58b16ea791a7817e923bc8567e6782f6797ca486b27bfbf1ae4f23d02d5aa54f1b021", 
+				"signature": "ae6e6a8b2ca8988a870e0ce9f4feff916e0c3bcae32ace785e24ea0b4e2a896c152e12a15405df7caeff7694fa993106025e787ebc9faec11b2ab4a1da1ef4268819606f08dfb78151cd900c82e0c119db8c07d7ee04cf2efe3aaccbfc2ec4a8" 
+			}`),
+			expectedErr: fmt.Errorf("invalid `signature` for `pubkey` at pos 0"),
+		},
 	}
 
 	for _, tt := range tests {
