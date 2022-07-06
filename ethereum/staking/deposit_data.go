@@ -147,3 +147,41 @@ func DepositDomain(version beaconcommon.Version) beaconcommon.BLSDomain {
 		beaconcommon.Root{},
 	)
 }
+
+func ValidateDepositData(
+	expectedCreds beaconcommon.Root,
+	expectedVersion beaconcommon.Version,
+	expectedAmount beaconcommon.Gwei,
+	datas ...*DepositData,
+) error {
+	for i, data := range datas {
+		tmpData := new(DepositData)
+		*tmpData = *data
+		if (tmpData.WithdrawalCredentials == beaconcommon.Root{}) {
+			tmpData.WithdrawalCredentials = expectedCreds
+		} else if tmpData.WithdrawalCredentials != expectedCreds {
+			return fmt.Errorf("invalid `withdrawal_credentials` %v at pos %v (expected %v)", tmpData.WithdrawalCredentials, i, expectedCreds)
+		}
+
+		if tmpData.Version != expectedVersion {
+			return fmt.Errorf("invalid `fork_version` %v at pos %v (expected %v)", data.Version, i, expectedVersion)
+		}
+
+		if tmpData.Amount == beaconcommon.Gwei(0) {
+			tmpData.Amount = expectedAmount
+		} else if tmpData.Amount != expectedAmount {
+			return fmt.Errorf("invalid `amount` %v at pos %v (expected %v)", tmpData.Amount, i, expectedAmount)
+		}
+
+		valid, err := tmpData.VerifySignature()
+		if err != nil {
+			return err
+		}
+
+		if !valid {
+			return fmt.Errorf("invalid `signature` for `pubkey` at pos %v", i)
+		}
+	}
+
+	return nil
+}
