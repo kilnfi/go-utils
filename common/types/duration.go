@@ -26,5 +26,5 @@ func (d *Duration) UnmarshalJSON(b []byte) (err error) {
 }
 
 func (d Duration) MarshalJSON() (b []byte, err error) {
-	return []byte(fmt.Sprintf(`"%q"`, d)), nil
+	return []byte(fmt.Sprintf(`%q`, d.Duration.String())), nil
 }
