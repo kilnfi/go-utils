@@ -39,5 +39,5 @@ func Network(v beaconcommon.Version) (string, error) {
 	if v, ok := networks[v.String()]; ok {
 		return v, nil
 	}
-	return "", fmt.Errorf("unkown fork version %v", v)
+	return "", fmt.Errorf("unknown fork version %v", v)
 }
