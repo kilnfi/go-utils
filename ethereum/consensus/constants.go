@@ -32,7 +32,7 @@ func ForkVersion(network string) (beaconcommon.Version, error) {
 	if v, ok := forkVersions[network]; ok {
 		return v, nil
 	}
-	return beaconcommon.Version{}, fmt.Errorf("unkown network %v", network)
+	return beaconcommon.Version{}, fmt.Errorf("unknown network %v", network)
 }
 
 func Network(v beaconcommon.Version) (string, error) {
