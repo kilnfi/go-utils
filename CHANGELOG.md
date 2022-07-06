@@ -1,5 +1,12 @@
 # CHANGELOG
 
+### v0.2.8 (July 7th 2022)
+
+### 🛠️ Bug fixes
+
+- [eth/staking] Add function to validate DepositData
+- [common/types] Fix Marshal Duration
+
 ### v0.2.7 (July 4th 2022)
 
 ### 🛠️ Bug fixes
