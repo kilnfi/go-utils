@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### v0.2.9 (July 7th 2022)
+
+### 🛠️ Bug fixes
+
+- [eth/staking] Fix ValidateDepositData
+
 ### v0.2.8 (July 7th 2022)
 
 ### 🛠️ Bug fixes
