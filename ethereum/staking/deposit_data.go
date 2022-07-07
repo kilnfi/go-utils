@@ -163,7 +163,9 @@ func ValidateDepositData(
 			return fmt.Errorf("invalid `withdrawal_credentials` %v at pos %v (expected %v)", tmpData.WithdrawalCredentials, i, expectedCreds)
 		}
 
-		if tmpData.Version != expectedVersion {
+		if (tmpData.Version == beaconcommon.Version{}) {
+			tmpData.Version = expectedVersion
+		} else if tmpData.Version != expectedVersion {
 			return fmt.Errorf("invalid `fork_version` %v at pos %v (expected %v)", data.Version, i, expectedVersion)
 		}
 

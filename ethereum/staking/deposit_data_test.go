@@ -233,10 +233,10 @@ func TestValidateDepositData(t *testing.T) {
 				"withdrawal_credentials": "00ba9a5425d1bb1d6af8223664da5ff39ca2ff110f917a2b0dc73b8f206f28a4", 
 				"amount": 32000000000, 
 				"signature": "abe8918b786effebb667e592ef43790b83f54fe4fcc6163f03d1fdb08ff4a75ed67d804659bb4adb44605d00dafa7b910b294e815c6e19166457ee9c22dab6b5fcbc6fd092617e8f3b0a462831cfdda0560fc006569b28d76b5efbd226139674",  
-				"fork_version": "00000000", 
+				"fork_version": "10000000", 
 				"network_name": "mainnet"
 			}`),
-			expectedErr: fmt.Errorf("invalid `fork_version` 0x00000000 at pos 0 (expected 0x10000020)"),
+			expectedErr: fmt.Errorf("invalid `fork_version` 0x10000000 at pos 0 (expected 0x10000020)"),
 		},
 		{
 			desc:            "all fields - invalid amount",
