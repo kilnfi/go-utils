@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### v0.3.0 (Unreleased)
+
+- [app] Create app object allowing to orchestrate services 
+
 ### v0.2.9 (July 7th 2022)
 
 ### 🛠️ Bug fixes
