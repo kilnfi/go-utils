@@ -367,17 +367,17 @@ func (app *App) run() error {
 	defer cancel()
 
 	// first thing we start listen to signals and open server connection so we listen to incoming request
-	if err = app.startSignalsAndServers(startCtx); err != nil {
+	if err := app.startSignalsAndServers(startCtx); err != nil {
 		return err
 	}
 
 	// initialize services
-	if err = app.initServices(startCtx); err != nil {
+	if err := app.initServices(startCtx); err != nil {
 		return err
 	}
 
 	// start services
-	if err = app.startServices(startCtx); err != nil {
+	if err := app.startServices(startCtx); err != nil {
 		_ = app.stopSignalsAndServers(startCtx)
 		return err
 	}
