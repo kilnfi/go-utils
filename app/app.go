@@ -197,20 +197,20 @@ func (app *App) readycheck(ctx context.Context) error {
 //   Service
 //      - MAY perform side effects (like API calls, disk io, logging, accessing db,  etc.)
 //      - MUST return an error in case initialization failed and nil if succeeded
-//      - MUST stop initialization and return ASAP if the context is cancelled
+//      - MUST stop initialization and return ASAP if the context is canceled
 //      - MUST not start any long live tasks (like starting a server, etc)
 
 // 3. Service Start: `svc.Init(context.Context) error`
 //  Service
 //      - MAY start long live tasks
 //      - MUST return an error in case starting failed and nil if succeeded
-//      - MUST stop starting and return ASAP if the context is cancelled
+//      - MUST stop starting and return ASAP if the context is canceled
 
 // 4. Service Stop: `svc.Stop(context.Context) error`
 //  Service
 //      - MUST gracefully close all long running tasks
 //      - MUST return an error in case stopping failed and nil if succeeded
-//      - MUST stop stopping and return ASAP if the context is cancelled
+//      - MUST stop stopping and return ASAP if the context is canceled
 
 // 4. Service Close: `svc.Close() error`
 // Service
@@ -351,17 +351,16 @@ func (app *App) stopServices(ctx context.Context) error {
 	app.logger.Infof("services stopped...")
 	app.setStatus(statusStopped)
 
-	return nil
+	return rErr
 }
 
 func (app *App) run() error {
-	raw, err := json.Marshal(app.cfg)
-	if err != nil {
+	if raw, err := json.Marshal(app.cfg); err != nil {
 		app.logger.WithError(err).Errorf("invalid config")
 		return err
+	} else {
+		app.logger.WithField("config", string(raw)).Infof("run app...")
 	}
-
-	app.logger.WithField("config", string(raw)).Infof("run app...")
 
 	startCtx, cancel := context.WithTimeout(context.Background(), app.cfg.StartTimeout.Duration)
 	defer cancel()
@@ -393,13 +392,12 @@ func (app *App) run() error {
 	stopCtx, cancel := context.WithTimeout(context.Background(), app.cfg.StopTimeout.Duration)
 	defer cancel()
 
-	if err = app.stopServices(stopCtx); err == nil {
-		err = app.stopSignalsAndServers(stopCtx)
+	if err := app.stopServices(stopCtx); err == nil {
+		return app.stopSignalsAndServers(stopCtx)
 	} else {
 		_ = app.stopSignalsAndServers(stopCtx)
+		return err
 	}
-
-	return err
 }
 
 func (app *App) listenSignals() {

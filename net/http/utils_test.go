@@ -86,7 +86,7 @@ func TestParseQueryObject(t *testing.T) {
 		Str  string `json:"str"`
 	}
 
-	req, _ := http.NewRequest(http.MethodGet, "/?bool=true&num=42&str=foobar", nil)
+	req, _ := http.NewRequest(http.MethodGet, "/?bool=true&num=42&str=foobar", http.NoBody)
 	err := ParseQuery(req, &s)
 
 	require.NoError(t, err)
