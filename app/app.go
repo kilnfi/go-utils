@@ -355,28 +355,29 @@ func (app *App) stopServices(ctx context.Context) error {
 }
 
 func (app *App) run() error {
-	if raw, err := json.Marshal(app.cfg); err != nil {
+	raw, err := json.Marshal(app.cfg)
+	if err != nil {
 		app.logger.WithError(err).Errorf("invalid config")
 		return err
-	} else {
-		app.logger.WithField("config", string(raw)).Infof("run app...")
 	}
+
+	app.logger.WithField("config", string(raw)).Infof("run app...")
 
 	startCtx, cancel := context.WithTimeout(context.Background(), app.cfg.StartTimeout.Duration)
 	defer cancel()
 
 	// first thing we start listen to signals and open server connection so we listen to incoming request
-	if err := app.startSignalsAndServers(startCtx); err != nil {
+	if err = app.startSignalsAndServers(startCtx); err != nil {
 		return err
 	}
 
 	// initialize services
-	if err := app.initServices(startCtx); err != nil {
+	if err = app.initServices(startCtx); err != nil {
 		return err
 	}
 
 	// start services
-	if err := app.startServices(startCtx); err != nil {
+	if err = app.startServices(startCtx); err != nil {
 		_ = app.stopSignalsAndServers(startCtx)
 		return err
 	}
@@ -392,12 +393,13 @@ func (app *App) run() error {
 	stopCtx, cancel := context.WithTimeout(context.Background(), app.cfg.StopTimeout.Duration)
 	defer cancel()
 
-	if err := app.stopServices(stopCtx); err == nil {
-		return app.stopSignalsAndServers(stopCtx)
-	} else {
+	err = app.stopServices(stopCtx)
+	if err != nil {
 		_ = app.stopSignalsAndServers(stopCtx)
 		return err
+
 	}
+	return app.stopSignalsAndServers(stopCtx)
 }
 
 func (app *App) listenSignals() {
