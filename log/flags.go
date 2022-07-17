@@ -5,11 +5,20 @@ import (
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+
+	cmdutils "github.com/kilnfi/go-utils/cmd/utils"
 )
 
 func Flags(v *viper.Viper, f *pflag.FlagSet) {
 	Level(v, f)
 	Format(v, f)
+}
+
+func ConfigFromViper(v *viper.Viper) *Config {
+	return &Config{
+		Format: GetLevel(v),
+		Level:  GetFormat(v),
+	}
 }
 
 const (
@@ -20,12 +29,20 @@ const (
 )
 
 func Level(v *viper.Viper, f *pflag.FlagSet) {
-	desc := fmt.Sprintf(`Log level (one of %q).
-Environment variable: %q`, []string{"panic", "error", "warn", "info", "debug"}, levelEnv)
+	desc := cmdutils.FlagDescWithDefault(
+		fmt.Sprintf("Log level (one of %q)", []string{"panic", "error", "warn", "info", "debug"}),
+		levelEnv,
+		levelDefault,
+	)
+
 	f.String(levelFlag, levelDefault, desc)
 	_ = v.BindPFlag(LevelViperKey, f.Lookup(levelFlag))
 	v.SetDefault(LevelViperKey, levelDefault)
 	_ = v.BindEnv(LevelViperKey, levelEnv)
+}
+
+func GetLevel(v *viper.Viper) string {
+	return v.GetString(LevelViperKey)
 }
 
 const (
@@ -36,17 +53,18 @@ const (
 )
 
 func Format(v *viper.Viper, f *pflag.FlagSet) {
-	desc := fmt.Sprintf(`Log formatter (one of %q).
-Environment variable: %q`, []string{"text", "json"}, formatEnv)
+	desc := cmdutils.FlagDescWithDefault(
+		fmt.Sprintf("Log formatter (one of %q)", []string{"text", "json"}),
+		formatEnv,
+		formatDefault,
+	)
+
 	f.String(formatFlag, formatDefault, desc)
 	_ = v.BindPFlag(FormatViperKey, f.Lookup(formatFlag))
 	v.SetDefault(FormatViperKey, formatDefault)
 	_ = v.BindEnv(FormatViperKey, formatEnv)
 }
 
-func NewConfigFromViper(v *viper.Viper) *Config {
-	return &Config{
-		Format: v.GetString(FormatViperKey),
-		Level:  v.GetString(LevelViperKey),
-	}
+func GetFormat(v *viper.Viper) string {
+	return v.GetString(FormatViperKey)
 }

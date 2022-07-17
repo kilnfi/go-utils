@@ -1,4 +1,4 @@
-package crypto
+package tls
 
 import (
 	"bytes"

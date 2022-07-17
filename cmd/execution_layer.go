@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/kilnfi/go-utils/cmd/utils"
 	execclient "github.com/kilnfi/go-utils/ethereum/execution/client"
-	jsonrpchttp "github.com/kilnfi/go-utils/net/jsonrpc/http"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -25,11 +23,11 @@ func NewCmdEthEL(
 
 	if newELClient == nil {
 		newELClient = func(v *viper.Viper) (*execclient.Client, error) {
-			return execclient.New(EthELConfigFromViper(v).SetDefault())
+			return execclient.New(execclient.ConfigFromViper(v).SetDefault())
 		}
 	}
 
-	v := ViperFromContext(ctx)
+	v := utils.ViperFromContext(ctx)
 
 	cmds := &cobra.Command{
 		Use:   "eth-el SUBCOMMAND",
@@ -42,7 +40,7 @@ func NewCmdEthEL(
 	}
 
 	// Register flags
-	EthELAddrFlag(v, cmds.PersistentFlags())
+	execclient.EthELAddrFlag(v, cmds.PersistentFlags())
 
 	cmds.AddCommand(newCmdEthELChainID(ethELCtx))
 	cmds.AddCommand(newCmdEthELBlockNumber(ethELCtx))
@@ -53,7 +51,7 @@ func newCmdEthELChainID(ctx *ethELContext) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "chain-id",
 		Short: "Get execution layer chain ID",
-		RunE: PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
+		RunE: utils.PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
 			return ctx.client.ChainID(ctx)
 		}),
 	}
@@ -65,35 +63,10 @@ func newCmdEthELBlockNumber(ctx *ethELContext) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "blocknumber",
 		Short: "Get execution layer chain's head number",
-		RunE: PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
+		RunE: utils.PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
 			return ctx.client.BlockNumber(ctx)
 		}),
 	}
 
 	return cmd
-}
-
-const (
-	ethELAddrFlag     = "eth-el-addr"
-	ethELAddrViperKey = "eth.el-addr"
-	ethELAddrEnv      = "ETH_EL_ADDR"
-)
-
-// EthELAddrFlag register flag for Eth1 node to connect to
-func EthELAddrFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := fmt.Sprintf(`JSON-RPC address of the Ethereum execution layer node to connect to.
-	Environment variable: %q`, ethELAddrEnv)
-	f.String(ethELAddrFlag, "", desc)
-	_ = v.BindPFlag(ethELAddrViperKey, f.Lookup(ethELAddrFlag))
-	_ = v.BindEnv(ethELAddrViperKey, ethELAddrEnv)
-}
-
-func GetEthELAddr(v *viper.Viper) string {
-	return v.GetString(ethELAddrViperKey)
-}
-
-func EthELConfigFromViper(v *viper.Viper) *jsonrpchttp.Config {
-	return &jsonrpchttp.Config{
-		Address: GetEthELAddr(v),
-	}
 }
