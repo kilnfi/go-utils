@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### v0.3.1 (July 18th 2022)
+
+- [cobra/viper] Extend Cobra/Viper flag management
+
 ### v0.3.0 (July 11th 2022)
 
 - [app] Create app object allowing to orchestrate services
