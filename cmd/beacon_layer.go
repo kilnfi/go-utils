@@ -2,14 +2,13 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/kilnfi/go-utils/cmd/utils"
 	consclient "github.com/kilnfi/go-utils/ethereum/consensus/client"
 	consclienthttp "github.com/kilnfi/go-utils/ethereum/consensus/client/http"
 	"github.com/kilnfi/go-utils/ethereum/consensus/flag"
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -27,11 +26,11 @@ func NewCmdEthCL(
 
 	if newCLClient == nil {
 		newCLClient = func(v *viper.Viper) (consclient.Client, error) {
-			return consclienthttp.NewClient(EthCLConfigFromViper(v).SetDefault())
+			return consclienthttp.NewClient(consclienthttp.ConfigFromViper(v).SetDefault())
 		}
 	}
 
-	v := ViperFromContext(ctx)
+	v := utils.ViperFromContext(ctx)
 
 	cmds := &cobra.Command{
 		Use:   "eth-cl SUBCOMMAND",
@@ -44,7 +43,7 @@ func NewCmdEthCL(
 	}
 
 	// Register flags
-	EthCLAddrFlag(v, cmds.PersistentFlags())
+	consclienthttp.Flags(v, cmds.PersistentFlags())
 
 	cmds.AddCommand(newCmdCLSpec(ethCLCtx))
 	cmds.AddCommand(newCmdCLGetValidator(ethCLCtx))
@@ -56,7 +55,7 @@ func newCmdCLSpec(ctx *ethCLContext) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-spec",
 		Short: "Print validator data",
-		RunE: PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
+		RunE: utils.PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
 			return ctx.client.GetSpec(ctx)
 		}),
 	}
@@ -72,7 +71,7 @@ func newCmdCLGetValidator(ctx *ethCLContext) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-validator",
 		Short: "Print validator data",
-		RunE: PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
+		RunE: utils.PrintJSON(func(cmd *cobra.Command, args []string) (res interface{}, err error) {
 			return ctx.client.GetValidator(ctx, slot.String(), validatorID)
 		}),
 	}
@@ -85,29 +84,4 @@ func newCmdCLGetValidator(ctx *ethCLContext) *cobra.Command {
 	_ = cmd.MarkFlagRequired("slot")
 
 	return cmd
-}
-
-const (
-	ethCLAddrFlag     = "eth-cl-addr"
-	ethCLAddrViperKey = "eth.cl-addr"
-	ethCLAddrEnv      = "ETH_CL_ADDR"
-)
-
-// EthCLAddrFlag register flag for Eth1 node to connect to
-func EthCLAddrFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := fmt.Sprintf(`Address of the Ethereum consensus layer node to connect to.
-	Environment variable: %q`, ethCLAddrEnv)
-	f.String(ethCLAddrFlag, "", desc)
-	_ = v.BindPFlag(ethCLAddrViperKey, f.Lookup(ethCLAddrFlag))
-	_ = v.BindEnv(ethCLAddrViperKey, ethCLAddrEnv)
-}
-
-func GetCLAddr(v *viper.Viper) string {
-	return v.GetString(ethCLAddrViperKey)
-}
-
-func EthCLConfigFromViper(v *viper.Viper) *consclienthttp.Config {
-	return &consclienthttp.Config{
-		Address: GetCLAddr(v),
-	}
 }

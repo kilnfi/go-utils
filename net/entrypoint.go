@@ -21,10 +21,6 @@ type EntrypointConfig struct {
 }
 
 func (cfg *EntrypointConfig) SetDefault() *EntrypointConfig {
-	if cfg.Address == "" {
-		cfg.Address = "localhost:8080"
-	}
-
 	if cfg.Network == "" {
 		cfg.Network = "tcp"
 	}

@@ -1,4 +1,4 @@
-package keystore
+package bls
 
 import (
 	"github.com/herumi/bls-eth-go-binary/bls"

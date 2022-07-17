@@ -26,6 +26,12 @@ func (cfg *Config) SetDefault() *Config {
 	if cfg.Server == nil {
 		cfg.Server = &kilnhttp.ServerConfig{}
 	}
+	if cfg.Server.Entrypoint == nil {
+		cfg.Server.Entrypoint = &kilnnet.EntrypointConfig{}
+	}
+	if cfg.Server.Entrypoint.Address == "" {
+		cfg.Server.Entrypoint.Address = ":8080"
+	}
 	cfg.Server.SetDefault()
 
 	if cfg.Healthz == nil {

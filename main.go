@@ -18,6 +18,7 @@ func main() {
 	cmds.AddCommand(cmd.NewCmdEthEL(ctx, nil))
 	cmds.AddCommand(cmd.NewCmdEthCL(ctx, nil))
 	cmds.AddCommand(cmd.NewCmdKeystore(ctx, nil))
+	cmds.AddCommand(cmd.NewCmdAllFlags())
 
 	if err := cmds.Execute(); err != nil {
 		log.WithError(err).Fatalf("main: execution failed")
