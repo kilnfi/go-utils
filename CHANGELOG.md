@@ -1,53 +1,68 @@
 # CHANGELOG
 
-### v0.3.2 (July 18th 2022)
+## v0.3.3 (July 18th 2022)
+
+### 🛠️ Bug fixes
+
+- [cobra/viper] Fix http ErrorMessage name
+
+## v0.3.2 (July 18th 2022)
+
+### 🛠️ Bug fixes
 
 - [cobra/viper] Fix Cobra/Viper
 
-### v0.3.1 (July 18th 2022)
+## v0.3.1 (July 18th 2022)
+
+### :dizzy: Features
 
 - [cobra/viper] Extend Cobra/Viper flag management
 
-### v0.3.0 (July 11th 2022)
+## v0.3.0 (July 11th 2022)
+
+### :dizzy: Features
 
 - [app] Create app object allowing to orchestrate services
 
-### v0.2.9 (July 7th 2022)
+## v0.2.9 (July 7th 2022)
 
 ### 🛠️ Bug fixes
 
 - [eth/staking] Fix ValidateDepositData
 
-### v0.2.8 (July 7th 2022)
+## v0.2.8 (July 7th 2022)
+
+### :dizzy: Features
+
+- [eth/staking] Add function to validate DepositData
 
 ### 🛠️ Bug fixes
 
-- [eth/staking] Add function to validate DepositData
 - [common/types] Fix Marshal Duration
 
-### v0.2.7 (July 4th 2022)
+## v0.2.7 (July 4th 2022)
 
 ### 🛠️ Bug fixes
 
 - [eth/staking] Add validation on unmarshal of DepositData
 
-### v0.2.6 (July 4th 2022)
+## v0.2.6 (July 4th 2022)
 
 ### 🛠️ Bug fixes
 
 - [eth/exec] Fix sepolia chain id
 
-### v0.2.5 (July 4th 2022)
+## v0.2.5 (July 4th 2022)
 
 ### 🛠️ Bug fixes
 
 - [eth/staking] Fix unmarshal/marshal of DepositData
 
-### v0.2.4 (June 28th 2022)
+## v0.2.4 (June 28th 2022)
 
 This is an empty release
 
-### v0.2.3 (June 28th 2022)
+## v0.2.3 (June 28th 2022)
 
 ### :dizzy: Features
 
@@ -57,19 +72,19 @@ This is an empty release
 
 - [keystore] Update SignTx to return an error if key is missing
 
-### v0.2.2 (June 23rd 2022)
+## v0.2.2 (June 23rd 2022)
 
 ### :dizzy: Features
 
 - [cmd/keystore] Add command to import keys
 
-### v0.2.1 (June 8th 2022)
+## v0.2.1 (June 8th 2022)
 
 ### 🕹️ Others
 
 - [mod] Update module name
 
-### v0.2.0 (June 8th 2022)
+## v0.2.0 (June 8th 2022)
 
 ### :dizzy: Features
 

@@ -12,13 +12,13 @@ func WriteJSON(rw http.ResponseWriter, statusCode int, data interface{}) error {
 	return json.NewEncoder(rw).Encode(data)
 }
 
-type ErrorResponse struct {
+type ErrorRespMsg struct {
 	Message string `json:"message" example:"error message"`
 	Code    string `json:"status,omitempty" example:"IR001"`
-}
+} // @name Error
 
 func WriteError(rw http.ResponseWriter, statusCode int, err error) {
-	_ = WriteJSON(rw, statusCode, ErrorResponse{
+	_ = WriteJSON(rw, statusCode, ErrorRespMsg{
 		Message: err.Error(),
 	})
 }
