@@ -12,7 +12,6 @@ func TestFlagDesc(t *testing.T) {
 
 		baseDesc string
 		envVar   string
-		dfault   interface{}
 
 		expectedFlagDesc string
 	}{
@@ -21,30 +20,24 @@ func TestFlagDesc(t *testing.T) {
 			expectedFlagDesc: "This is a great flag",
 		},
 		{
-			baseDesc: "This is a great flag",
-			envVar:   "GREAT",
-			expectedFlagDesc: `This is a great flag
-  Environment variable: GREAT`,
+			baseDesc:         "This is a great flag",
+			envVar:           "GREAT",
+			expectedFlagDesc: `This is a great flag [env: GREAT]`,
 		},
 		{
-			baseDesc: "This is a great flag",
-			dfault:   []string{"a", "b"},
-			expectedFlagDesc: `This is a great flag
-  Default: ["a","b"]`,
+			baseDesc:         "This is a great flag",
+			expectedFlagDesc: `This is a great flag`,
 		},
 		{
-			baseDesc: "This is a great flag",
-			envVar:   "GREAT",
-			dfault:   []string{"a", "b"},
-			expectedFlagDesc: `This is a great flag
-  Environment variable: GREAT
-  Default: ["a","b"]`,
+			baseDesc:         "This is a great flag",
+			envVar:           "GREAT",
+			expectedFlagDesc: `This is a great flag [env: GREAT]`,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.testDesc, func(t *testing.T) {
-			assert.Equal(t, tt.expectedFlagDesc, flagDesc(tt.baseDesc, tt.envVar, tt.dfault))
+			assert.Equal(t, tt.expectedFlagDesc, FlagDesc(tt.baseDesc, tt.envVar))
 		})
 	}
 }

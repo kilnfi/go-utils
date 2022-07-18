@@ -16,8 +16,8 @@ func Flags(v *viper.Viper, f *pflag.FlagSet) {
 
 func ConfigFromViper(v *viper.Viper) *Config {
 	return &Config{
-		Format: GetLevel(v),
-		Level:  GetFormat(v),
+		Format: GetFormat(v),
+		Level:  GetLevel(v),
 	}
 }
 
@@ -29,10 +29,9 @@ const (
 )
 
 func Level(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("Log level (one of %q)", []string{"panic", "error", "warn", "info", "debug"}),
 		levelEnv,
-		levelDefault,
 	)
 
 	f.String(levelFlag, levelDefault, desc)
@@ -53,10 +52,9 @@ const (
 )
 
 func Format(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("Log formatter (one of %q)", []string{"text", "json"}),
 		formatEnv,
-		formatDefault,
 	)
 
 	f.String(formatFlag, formatDefault, desc)
