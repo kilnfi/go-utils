@@ -80,13 +80,12 @@ const (
 )
 
 func (fl *FlagPrefixer) UserFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's user", fl.baseDesc),
 		fl.Env(userEnv),
-		fl.dialect,
 	)
 
-	f.String(fl.FlagName(userFlag), "", desc)
+	f.String(fl.FlagName(userFlag), fl.dialect, desc)
 	_ = v.BindPFlag(fl.ViperKey(userViperKey), f.Lookup(fl.FlagName(userFlag)))
 	_ = v.BindEnv(fl.ViperKey(userViperKey), fl.Env(userEnv))
 	v.SetDefault(fl.ViperKey(userViperKey), fl.dialect)
@@ -103,13 +102,12 @@ const (
 )
 
 func (fl *FlagPrefixer) PasswordFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's password", fl.baseDesc),
 		fl.Env(passwordEnv),
-		fl.dialect,
 	)
 
-	f.String(fl.FlagName(passwordFlag), "", desc)
+	f.String(fl.FlagName(passwordFlag), fl.dialect, desc)
 	_ = v.BindPFlag(fl.ViperKey(passwordViperKey), f.Lookup(fl.FlagName(passwordFlag)))
 	_ = v.BindEnv(fl.ViperKey(passwordViperKey), fl.Env(passwordEnv))
 	v.SetDefault(fl.ViperKey(passwordViperKey), fl.dialect)
@@ -123,17 +121,16 @@ const (
 	hostFlag     = "db-host"
 	hostViperKey = "db.host"
 	hostEnv      = "DB_HOST"
-	hostDefault  = "localhost:5432"
+	hostDefault  = "localhost"
 )
 
 func (fl *FlagPrefixer) HostFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's host", fl.baseDesc),
 		fl.Env(hostEnv),
-		hostDefault,
 	)
 
-	f.String(fl.FlagName(hostFlag), "", desc)
+	f.String(fl.FlagName(hostFlag), hostDefault, desc)
 	_ = v.BindPFlag(fl.ViperKey(hostViperKey), f.Lookup(fl.FlagName(hostFlag)))
 	_ = v.BindEnv(fl.ViperKey(hostViperKey), fl.Env(hostEnv))
 	v.SetDefault(fl.ViperKey(hostViperKey), hostDefault)
@@ -151,10 +148,9 @@ const (
 )
 
 func (fl *FlagPrefixer) PortFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's port", fl.baseDesc),
 		fl.Env(portEnv),
-		portDefault,
 	)
 
 	f.Uint16(fl.FlagName(portFlag), portDefault, desc)
@@ -175,13 +171,12 @@ const (
 
 func (fl *FlagPrefixer) NameFlag(v *viper.Viper, f *pflag.FlagSet) {
 	nameDefault := fl.Prefix()
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's name", fl.baseDesc),
 		fl.Env(nameEnv),
-		nameDefault,
 	)
 
-	f.String(fl.FlagName(nameFlag), "", desc)
+	f.String(fl.FlagName(nameFlag), nameDefault, desc)
 	_ = v.BindPFlag(fl.ViperKey(nameViperKey), f.Lookup(fl.FlagName(nameFlag)))
 	_ = v.BindEnv(fl.ViperKey(nameViperKey), fl.Env(nameEnv))
 	v.SetDefault(fl.ViperKey(nameViperKey), nameDefault)
@@ -199,10 +194,9 @@ const (
 )
 
 func (fl *FlagPrefixer) PoolSizeFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's maximum number of connections", fl.baseDesc),
 		fl.Env(poolSizeEnv),
-		poolSizeDefault,
 	)
 
 	f.Int(fl.FlagName(poolSizeFlag), poolSizeDefault, desc)
@@ -223,10 +217,9 @@ const (
 )
 
 func (fl *FlagPrefixer) ConnectTimeoutFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's time client wait for a free connection", fl.baseDesc),
 		fl.Env(connectTimeoutEnv),
-		connectTimeoutDefault,
 	)
 
 	f.Duration(fl.FlagName(connectTimeoutFlag), connectTimeoutDefault, desc)
@@ -247,10 +240,9 @@ const (
 )
 
 func (fl *FlagPrefixer) KeepAliveFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's keepalive client connection", fl.baseDesc),
 		fl.Env(keepAliveEnv),
-		keepAliveDefault,
 	)
 
 	f.Duration(fl.FlagName(keepAliveFlag), keepAliveDefault, desc)
@@ -289,10 +281,9 @@ const (
 )
 
 func (fl *FlagPrefixer) SSLModeFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
-		fmt.Sprintf("SSL mode to connect to %v\n  Must be one of %q (see https://www.postgresql.org/docs/current/libpq-ssl.html for more information)", fl.baseDesc, availableSSLModes),
+	desc := cmdutils.FlagDesc(
+		fmt.Sprintf("SSL mode to connect to %v\nMust be one of %q (see https://www.postgresql.org/docs/current/libpq-ssl.html for more information)", fl.baseDesc, availableSSLModes),
 		fl.Env(sslModeEnv),
-		sslModeDefault,
 	)
 
 	f.String(fl.FlagName(sslModeFlag), sslModeDefault, desc)

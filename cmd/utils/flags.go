@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -66,24 +65,8 @@ func ViperKey(flag string) string {
 }
 
 func FlagDesc(desc, envVar string) string {
-	return flagDesc(desc, envVar, nil)
-}
-
-func FlagDescWithDefault(desc, envVar string, dfault interface{}) string {
-	return flagDesc(desc, envVar, dfault)
-}
-
-func flagDesc(desc, envVar string, dfault interface{}) string {
 	if envVar != "" {
-		desc = fmt.Sprintf("%v\n  Environment variable: %v", desc, envVar)
-	}
-
-	if dfault != nil {
-		raw, err := json.Marshal(dfault)
-		if err != nil {
-			panic(err)
-		}
-		desc = fmt.Sprintf("%v\n  Default: %v", desc, string(raw))
+		desc = fmt.Sprintf("%v [env: %v]", desc, envVar)
 	}
 
 	return desc

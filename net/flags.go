@@ -55,13 +55,12 @@ const (
 )
 
 func (fl *EntrypointFlagPrefixer) AddrFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := cmdutils.FlagDescWithDefault(
+	desc := cmdutils.FlagDesc(
 		fmt.Sprintf("%v's address", fl.baseDesc),
 		fl.Env(addrEnv),
-		fl.defaultAddr,
 	)
 
-	f.String(fl.FlagName(addrFlag), "", desc)
+	f.String(fl.FlagName(addrFlag), fl.defaultAddr, desc)
 	_ = v.BindPFlag(fl.ViperKey(addrViperKey), f.Lookup(fl.FlagName(addrFlag)))
 	_ = v.BindEnv(fl.ViperKey(addrViperKey), fl.Env(addrEnv))
 	v.SetDefault(fl.ViperKey(addrViperKey), fl.defaultAddr)

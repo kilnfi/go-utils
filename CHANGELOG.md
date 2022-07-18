@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### v0.3.2 (July 18th 2022)
+
+- [cobra/viper] Fix Cobra/Viper
+
 ### v0.3.1 (July 18th 2022)
 
 - [cobra/viper] Extend Cobra/Viper flag management
