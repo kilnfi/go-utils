@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.3.4 (July 19th 2022)
+
+### 🛠️ Bug fixes
+
+- [sql] Fix Postgres DSN
+
 ## v0.3.3 (July 18th 2022)
 
 ### 🛠️ Bug fixes
