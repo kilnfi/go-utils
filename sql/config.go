@@ -67,8 +67,8 @@ func (cfg *Config) SetDefault() *Config {
 	return cfg
 }
 
-func (cfg *Config) DSN() string {
-	u := url.URL{
+func (cfg *Config) DSN() *url.URL {
+	u := &url.URL{
 		Scheme: cfg.Dialect,
 		Host:   fmt.Sprintf("%v:%v", cfg.Host, cfg.Port),
 		User:   url.UserPassword(cfg.User, cfg.Password),
@@ -81,7 +81,7 @@ func (cfg *Config) DSN() string {
 	}
 
 	if cfg.SSLCA != "" {
-		query.Add("sslca", cfg.SSLCA)
+		query.Add("sslrootcert", cfg.SSLCA)
 	}
 
 	if cfg.SSLKey != "" {
@@ -98,5 +98,5 @@ func (cfg *Config) DSN() string {
 
 	u.RawQuery = query.Encode()
 
-	return u.String()
+	return u
 }
