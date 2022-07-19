@@ -59,7 +59,7 @@ func TestDSN(t *testing.T) {
 
 	dir := t.TempDir()
 
-	err := os.WriteFile(path.Join(dir, "ca.pem"), []byte(rootPEM), 0777)
+	err := os.WriteFile(path.Join(dir, "ca.pem"), []byte(rootPEM), 0o777)
 	require.NoError(t, err)
 
 	cfg = &Config{
