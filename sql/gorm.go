@@ -7,10 +7,7 @@ import (
 
 func GormOpen(cfg *Config) (*gorm.DB, error) {
 	return gorm.Open(
-		postgres.New(postgres.Config{
-			DriverName: "pgx",
-			DSN:        cfg.DSN(),
-		}),
+		postgres.Open(cfg.DSN().String()),
 		new(gorm.Config),
 	)
 }
