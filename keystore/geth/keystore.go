@@ -66,3 +66,7 @@ func (s *KeyStore) SignTx(_ context.Context, addr gethcommon.Address, tx *gethty
 		chainID,
 	)
 }
+
+func (s *KeyStore) HasAccount(_ context.Context, addr gethcommon.Address) (bool, error) {
+	return s.keys.HasAddress(addr), nil
+}
