@@ -251,7 +251,7 @@ func (app *App) initServices(ctx context.Context) error {
 	app.logger.Infof("initialize services...")
 
 	wg := &sync.WaitGroup{}
-	errors := make(chan error)
+	errors := make(chan error, 3*len(app.services))
 
 	wg.Add(len(app.services))
 	for _, svc := range app.services {
