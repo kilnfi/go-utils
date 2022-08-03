@@ -250,8 +250,6 @@ func (app *App) initServices(ctx context.Context) error {
 	app.setStatus(statusInitializing)
 	app.logger.Infof("initialize services...")
 
-	initCtx, cancelInit := context.WithCancel(ctx)
-
 	wg := &sync.WaitGroup{}
 	errors := make(chan error)
 
@@ -277,7 +275,7 @@ func (app *App) initServices(ctx context.Context) error {
 			}
 
 			if init, ok := svc.(Initializable); ok {
-				err := init.Init(initCtx)
+				err := init.Init(ctx)
 				if err != nil {
 					errors <- err
 					return
@@ -286,20 +284,13 @@ func (app *App) initServices(ctx context.Context) error {
 		}(svc)
 	}
 
-	var initErr error
-
-	go func() {
-		initErr = <-errors
-		if initErr != nil {
-			cancelInit()
-			for range errors {
-				// drain errors
-			}
-		}
-	}()
-
 	wg.Wait()
+
 	close(errors)
+	var initErr error
+	for err := range errors {
+		initErr = err
+	}
 
 	if initErr != nil {
 		app.setStatus(statusInitErr)
