@@ -6,9 +6,9 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func GormOpen(cfg *Config, gormLoggerOn bool) (*gorm.DB, error) {
+func GormOpen(cfg *Config) (*gorm.DB, error) {
 	config := new(gorm.Config)
-	if gormLoggerOn {
+	if cfg.GormLoggerOff {
 		config.Logger = logger.Default.LogMode(logger.Silent)
 	}
 	return gorm.Open(

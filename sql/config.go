@@ -23,6 +23,8 @@ type Config struct {
 	PoolSize int
 
 	KeepAlive *types.Duration
+
+	GormLoggerOff bool
 }
 
 var pgDialect = "postgres"
