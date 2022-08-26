@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"net/http"
 	"strconv"
 
 	dockertypes "github.com/docker/docker/api/types"
@@ -86,6 +87,86 @@ func NewPostgresServiceConfig(opts *PostgresServiceOpts) (*ServiceConfig, error)
 		}
 
 		return db.PingContext(ctx)
+	}
+
+	return &ServiceConfig{
+		Container: containerCfg,
+		Host:      hostCfg,
+		IsReady:   isReady,
+	}, nil
+}
+
+type TraefikServiceOpts struct {
+	Version, Port string
+}
+
+func (opts *TraefikServiceOpts) SetDefault() *TraefikServiceOpts {
+	if opts.Version == "" {
+		opts.Version = "v2.8.0"
+	}
+
+	if opts.Port == "" {
+		opts.Port = "0" // expose on random available port
+	}
+
+	return opts
+}
+
+func NewTreafikServiceConfig(opts *TraefikServiceOpts) (*ServiceConfig, error) {
+	ports, portBindings, err := nat.ParsePortSpecs([]string{
+		fmt.Sprintf("%v:80", opts.Port),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	volumes, binds, err := ParseVolumes("/var/run/docker.sock:/var/run/docker.sock:ro")
+	if err != nil {
+		return nil, err
+	}
+
+	containerCfg := &dockercontainer.Config{
+		Image: fmt.Sprintf("traefik:%v", opts.Version),
+		Cmd: []string{
+			"--api.insecure=true",
+			"--providers.docker=true",
+			"--providers.docker.exposedbydefault=false",
+			"--entrypoints.web.address=:80",
+			"--ping=true",
+			"--ping.entryPoint=web",
+		},
+		ExposedPorts: ports,
+		Volumes:      volumes,
+	}
+
+	hostCfg := &dockercontainer.HostConfig{
+		PortBindings: portBindings,
+		Binds:        binds,
+	}
+
+	isReady := func(ctx context.Context, container *dockertypes.ContainerJSON) error {
+		portBindings, err := GetPortBindings("80", container)
+		if err != nil {
+			return err
+		}
+
+		req, _ := http.NewRequestWithContext(
+			ctx,
+			http.MethodGet,
+			fmt.Sprintf("http://%v:%v/ping", portBindings[0].HostIP, portBindings[0].HostPort),
+			nil,
+		)
+
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			return err
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("invalid status: %v", resp.Status)
+		}
+
+		return nil
 	}
 
 	return &ServiceConfig{

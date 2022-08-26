@@ -1,8 +1,7 @@
 package docker
 
 import (
-	"fmt"
-
+	kilncmd "github.com/kilnfi/go-utils/cmd/utils"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -15,8 +14,7 @@ const (
 
 // HostFlag register flag for docker host
 func HostFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := fmt.Sprintf(`Docker host
-	Environment variable: %q`, hostEnv)
+	desc := kilncmd.FlagDesc("Docker host", hostEnv)
 	f.String(hostFlag, "", desc)
 	_ = v.BindPFlag(hostViperKey, f.Lookup(hostFlag))
 	_ = v.BindEnv(hostViperKey, hostEnv)
@@ -34,8 +32,7 @@ const (
 
 // APIVersionFlag register flag for docker API version
 func APIVersionFlag(v *viper.Viper, f *pflag.FlagSet) {
-	desc := fmt.Sprintf(`Docker API version
-	Environment variable: %q`, apiVersionEnv)
+	desc := kilncmd.FlagDesc("Docker API version", apiVersionEnv)
 	f.String(apiVersionFlag, "", desc)
 	_ = v.BindPFlag(apiVersionViperKey, f.Lookup(apiVersionFlag))
 	_ = v.BindEnv(apiVersionViperKey, apiVersionEnv)
