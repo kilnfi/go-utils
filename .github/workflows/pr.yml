@@ -5,7 +5,7 @@ on:
       - '**.md'
       - .gitignore
 env:
-  GO_VERSION: 1.17
+  GO_VERSION: 1.18
 jobs:
   unit-tests:
     name: 'Unit tests in ${{ matrix.os }}'
@@ -25,7 +25,28 @@ jobs:
           submodules: recursive
       - name: 'Run unit tests and generage HTML coverage report'
         run: |
-          make test-and-generate-coverage-html
+          make unit-test-cov
+  integration-tests:
+    name: 'Integration tests in ${{ matrix.os }}'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-18.04"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: 'Pull postgres 14.4 docker image so it is available for integeration test'
+        run: |
+          docker pull postgres:14.4
+      - name: 'Run integration tests and generage HTML coverage report'
+        run: |
+          make integration-test-cov
+
   lint:
       name: 'Linting tests'
       runs-on: ubuntu-18.04
