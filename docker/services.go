@@ -154,7 +154,7 @@ func NewTreafikServiceConfig(opts *TraefikServiceOpts) (*ServiceConfig, error) {
 			ctx,
 			http.MethodGet,
 			fmt.Sprintf("http://%v:%v/ping", portBindings[0].HostIP, portBindings[0].HostPort),
-			nil,
+			http.NoBody,
 		)
 
 		resp, err := http.DefaultClient.Do(req)
