@@ -32,8 +32,8 @@ const (
 	apiVersionEnv      = "DOCKER_API_VERSION"
 )
 
-// ApiVersionFlag register flag for docker API version
-func ApiVersionFlag(v *viper.Viper, f *pflag.FlagSet) {
+// APIVersionFlag register flag for docker API version
+func APIVersionFlag(v *viper.Viper, f *pflag.FlagSet) {
 	desc := fmt.Sprintf(`Docker API version
 	Environment variable: %q`, apiVersionEnv)
 	f.String(apiVersionFlag, "", desc)
@@ -41,13 +41,13 @@ func ApiVersionFlag(v *viper.Viper, f *pflag.FlagSet) {
 	_ = v.BindEnv(apiVersionViperKey, apiVersionEnv)
 }
 
-func GetApiVersion(v *viper.Viper) string {
+func GetAPIVersion(v *viper.Viper) string {
 	return v.GetString(apiVersionViperKey)
 }
 
 func ClientConfigFromViper(v *viper.Viper) *ClientConfig {
 	return &ClientConfig{
 		Host:    GetHost(v),
-		Version: GetApiVersion(v),
+		Version: GetAPIVersion(v),
 	}
 }

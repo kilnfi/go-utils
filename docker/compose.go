@@ -6,7 +6,6 @@ import (
 	"time"
 
 	dockerref "github.com/docker/distribution/reference"
-	"github.com/docker/docker/api/types"
 	dockertypes "github.com/docker/docker/api/types"
 	dockercontainer "github.com/docker/docker/api/types/container"
 	dockernetwork "github.com/docker/docker/api/types/network"
@@ -100,7 +99,7 @@ func (c *Compose) name(name string) string {
 	return fmt.Sprintf("%v_%v", c.cfg.Namespace, name)
 }
 
-func (c *Compose) RegisterNetwork(name string, cfg dockertypes.NetworkCreate) {
+func (c *Compose) RegisterNetwork(name string, cfg *dockertypes.NetworkCreate) {
 	c.networks = append(c.networks, &network{
 		name: c.name(name),
 		cfg:  cfg,
@@ -109,7 +108,7 @@ func (c *Compose) RegisterNetwork(name string, cfg dockertypes.NetworkCreate) {
 
 type network struct {
 	name string
-	cfg  dockertypes.NetworkCreate
+	cfg  *dockertypes.NetworkCreate
 
 	id  string
 	err error
@@ -129,7 +128,7 @@ func (c *Compose) createNetwork(ctx context.Context, ntwrk *network) error {
 	logger := c.logger.WithField("network.name", ntwrk.name)
 
 	logger.Infof("create network...")
-	resp, err := c.dockerc.NetworkCreate(ctx, ntwrk.name, ntwrk.cfg)
+	resp, err := c.dockerc.NetworkCreate(ctx, ntwrk.name, *ntwrk.cfg)
 	if err != nil {
 		ntwrk.err = err
 		logger.WithError(err).Infof("failed to create network...")
@@ -319,7 +318,7 @@ func (c *Compose) pullImage(ctx context.Context, image string) error {
 		return err
 	}
 
-	options := types.ImagePullOptions{
+	options := dockertypes.ImagePullOptions{
 		RegistryAuth: "", // TODO: deal with docker registry authentication
 	}
 
@@ -441,23 +440,6 @@ func (c *Compose) startContainer(ctx context.Context, svc *service) error {
 			return err
 		}
 		logger.Infof("container started")
-
-		err = c.isContainerReady(ctx, svc)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (c *Compose) isContainerReady(ctx context.Context, svc *service) error {
-	if svc.err != nil {
-		return svc.err
-	}
-
-	if svc.id == "" {
-		return fmt.Errorf("container not started")
 	}
 
 	return nil
@@ -527,12 +509,11 @@ func (c *Compose) waitContainer(ctx context.Context, svc *service, timeout time.
 				return svc.err
 			}
 
-			if err := svc.cfg.IsReady(timeoutCtx, container); err == nil {
+			if err = svc.cfg.IsReady(timeoutCtx, container); err == nil {
 				logger.Infof("container is ready")
 				return nil
-			} else {
-				logger.WithError(err).Warnf("container not yet ready...")
 			}
+			logger.WithError(err).Warnf("container not yet ready...")
 		}
 	}
 }

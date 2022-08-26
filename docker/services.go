@@ -9,13 +9,15 @@ import (
 	dockertypes "github.com/docker/docker/api/types"
 	dockercontainer "github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v4/stdlib" // imported so pgx sql driver is registered
 	kilnsql "github.com/kilnfi/go-utils/sql"
 )
 
 type PostgresServiceOpts struct {
 	Version, Port, User, Password string
 }
+
+var pgDialect = "postgres"
 
 func (opts *PostgresServiceOpts) SetDefault() *PostgresServiceOpts {
 	if opts.Version == "" {
@@ -27,11 +29,11 @@ func (opts *PostgresServiceOpts) SetDefault() *PostgresServiceOpts {
 	}
 
 	if opts.User == "" {
-		opts.User = "postgres"
+		opts.User = pgDialect
 	}
 
 	if opts.Password == "" {
-		opts.Password = "postgres"
+		opts.Password = pgDialect
 	}
 
 	return opts
@@ -74,8 +76,8 @@ func NewPostgresServiceConfig(opts *PostgresServiceOpts) (*ServiceConfig, error)
 			Port:     uint16(port),
 			User:     opts.User,
 			Password: opts.Password,
-			Dialect:  "postgres",
-			DBName:   "postgres",
+			Dialect:  pgDialect,
+			DBName:   pgDialect,
 		}).SetDefault()
 
 		db, err := sql.Open("pgx", cfg.DSN().String())

@@ -45,12 +45,12 @@ func ParseVolumes(specs ...string) (volumes map[string]struct{}, binds []string,
 	return
 }
 
-// GetPortBindings returns the list of port bindingto access container on given port
+// GetPortBindings returns the list of port binding to access container on given port
 func GetPortBindings(port string, container *dockertypes.ContainerJSON) ([]nat.PortBinding, error) {
 	proto := "tcp"
 	parts := strings.SplitN(port, "/", 2)
 
-	if len(parts) == 2 && len(parts[1]) != 0 {
+	if len(parts) == 2 && parts[1] == "" {
 		port = parts[0]
 		proto = parts[1]
 	}
