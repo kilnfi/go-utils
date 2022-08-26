@@ -40,6 +40,28 @@ func (opts *PostgresServiceOpts) SetDefault() *PostgresServiceOpts {
 	return opts
 }
 
+// SQLConfig returns an SQL config to connect to the postgres container from the host
+func (opts *PostgresServiceOpts) SQLConfig(container *dockertypes.ContainerJSON) (*kilnsql.Config, error) {
+	portBindings, err := GetPortBindings("5432", container)
+	if err != nil {
+		return nil, err
+	}
+
+	port, err := strconv.Atoi(portBindings[0].HostPort)
+	if err != nil {
+		return nil, err
+	}
+
+	return (&kilnsql.Config{
+		Host:     portBindings[0].HostIP,
+		Port:     uint16(port),
+		User:     opts.User,
+		Password: opts.Password,
+		Dialect:  pgDialect,
+		DBName:   pgDialect,
+	}).SetDefault(), nil
+}
+
 func NewPostgresServiceConfig(opts *PostgresServiceOpts) (*ServiceConfig, error) {
 	ports, portBindings, err := nat.ParsePortSpecs([]string{
 		fmt.Sprintf("%v:5432", opts.Port),
@@ -62,26 +84,12 @@ func NewPostgresServiceConfig(opts *PostgresServiceOpts) (*ServiceConfig, error)
 	}
 
 	isReady := func(ctx context.Context, container *dockertypes.ContainerJSON) error {
-		portBindings, err := GetPortBindings("5432", container)
+		sqlCfg, err := opts.SQLConfig(container)
 		if err != nil {
 			return err
 		}
 
-		port, err := strconv.Atoi(portBindings[0].HostPort)
-		if err != nil {
-			return err
-		}
-
-		cfg := (&kilnsql.Config{
-			Host:     portBindings[0].HostIP,
-			Port:     uint16(port),
-			User:     opts.User,
-			Password: opts.Password,
-			Dialect:  pgDialect,
-			DBName:   pgDialect,
-		}).SetDefault()
-
-		db, err := sql.Open("pgx", cfg.DSN().String())
+		db, err := sql.Open("pgx", sqlCfg.DSN().String())
 		if err != nil {
 			return err
 		}
@@ -110,6 +118,16 @@ func (opts *TraefikServiceOpts) SetDefault() *TraefikServiceOpts {
 	}
 
 	return opts
+}
+
+// Addr returns address to connect to the traefik container from the host
+func (opts *TraefikServiceOpts) Addr(container *dockertypes.ContainerJSON) (string, error) {
+	portBindings, err := GetPortBindings("80", container)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("http://%v:%v", portBindings[0].HostIP, portBindings[0].HostPort), nil
 }
 
 func NewTreafikServiceConfig(opts *TraefikServiceOpts) (*ServiceConfig, error) {
@@ -145,7 +163,7 @@ func NewTreafikServiceConfig(opts *TraefikServiceOpts) (*ServiceConfig, error) {
 	}
 
 	isReady := func(ctx context.Context, container *dockertypes.ContainerJSON) error {
-		portBindings, err := GetPortBindings("80", container)
+		addr, err := opts.Addr(container)
 		if err != nil {
 			return err
 		}
@@ -153,7 +171,7 @@ func NewTreafikServiceConfig(opts *TraefikServiceOpts) (*ServiceConfig, error) {
 		req, _ := http.NewRequestWithContext(
 			ctx,
 			http.MethodGet,
-			fmt.Sprintf("http://%v:%v/ping", portBindings[0].HostIP, portBindings[0].HostPort),
+			fmt.Sprintf("%v/ping", addr),
 			http.NoBody,
 		)
 
