@@ -35,10 +35,10 @@ endif
 build/coverage:
 	@mkdir -p build/coverage
 
-test: build/coverage
+unit-test: build/coverage
 	@go test -covermode=count -coverprofile $(UNIT_COVERAGE_OUT) -v $(PACKAGES)
 
-test-and-generate-coverage-html: test
+unit-test-cov: unit-test
 	@go tool cover -html=$(UNIT_COVERAGE_OUT) -o $(UNIT_COVERAGE_HTML)
 
 fix-lint: ## Run linter to fix issues
@@ -51,5 +51,5 @@ test-lint: ## Check linting
 integration-test: build/coverage
 	@go test -covermode=count -coverprofile $(INTEGRATION_COVERAGE_OUT) -v --tags integration ${PACKAGES}
 
-integration-test-and-coverage-html: integration-test
+integration-test-cov: integration-test
 	@go tool cover -html=$(INTEGRATION_COVERAGE_OUT) -o $(INTEGRATION_COVERAGE_HTML)

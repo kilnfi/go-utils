@@ -25,7 +25,7 @@ jobs:
           submodules: recursive
       - name: 'Run unit tests and generage HTML coverage report'
         run: |
-          make test-and-generate-coverage-html
+          make unit-test-cov
   integration-tests:
     name: 'Integration tests in ${{ matrix.os }}'
     strategy:
@@ -45,7 +45,7 @@ jobs:
           docker pull postgres:14.4
       - name: 'Run integration tests and generage HTML coverage report'
         run: |
-          make integration-test-and-generate-coverage-html
+          make integration-test-cov
 
   lint:
       name: 'Linting tests'
