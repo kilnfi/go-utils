@@ -3,6 +3,7 @@ package sql
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/jackc/pgx/v4"
@@ -16,7 +17,7 @@ func CreateTempDB(t *testing.T, cfg *Config) (*Config, error) {
 		return nil, err
 	}
 
-	name := t.Name()
+	name := sanitizeName(t.Name())
 	err = createDB(context.TODO(), conn, name)
 	if err != nil {
 		return nil, err
@@ -49,4 +50,9 @@ func dropDB(ctx context.Context, conn *pgx.Conn, dbName string) error {
 	}
 
 	return nil
+}
+
+func sanitizeName(name string) string {
+	name = strings.ReplaceAll(name, "/", "_")
+	return name
 }
