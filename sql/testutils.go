@@ -30,6 +30,7 @@ func CreateTempDB(t *testing.T, cfg *Config) (*Config, error) {
 
 	dbCfg := new(Config)
 	*dbCfg = *cfg
+	dbCfg.DBName = name
 
 	return dbCfg, nil
 }
@@ -54,5 +55,6 @@ func dropDB(ctx context.Context, conn *pgx.Conn, dbName string) error {
 
 func sanitizeName(name string) string {
 	name = strings.ReplaceAll(name, "/", "_")
+	name = strings.ToLower(name)
 	return name
 }
