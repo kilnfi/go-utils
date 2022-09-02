@@ -12,7 +12,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1
-	github.com/hashicorp/go-retryablehttp v0.7.0
+	github.com/hashicorp/go-retryablehttp v0.7.1
 	github.com/hashicorp/vault/api v1.5.0
 	github.com/hellofresh/health-go/v4 v4.6.0
 	github.com/herumi/bls-eth-go-binary v0.0.0-20220216073600-600054663ec1
