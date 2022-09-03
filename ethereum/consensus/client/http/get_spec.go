@@ -6,6 +6,7 @@ import (
 
 	"github.com/Azure/go-autorest/autorest"
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
+	"github.com/protolambda/ztyp/view"
 )
 
 // GetSpec returns Ethreum 2.0 specifications configuration used on the node.
@@ -49,49 +50,49 @@ func newGetSpecRequest(ctx context.Context) (*http.Request, error) {
 //nolint:revive,stylecheck // use uppercase as per protolambda/zrnt package
 type spec struct {
 	beaconcommon.Spec
-	BASE_REWARD_FACTOR                         uint64 `json:"BASE_REWARD_FACTOR,string"`
-	BYTES_PER_LOGS_BLOOM                       uint64 `json:"BYTES_PER_LOGS_BLOOM,string"`
-	CHURN_LIMIT_QUOTIENT                       uint64 `json:"CHURN_LIMIT_QUOTIENT,string"`
-	DEPOSIT_CHAIN_ID                           uint64 `json:"DEPOSIT_CHAIN_ID,string"`
-	DEPOSIT_NETWORK_ID                         uint64 `json:"DEPOSIT_NETWORK_ID,string"`
-	ETH1_FOLLOW_DISTANCE                       uint64 `json:"ETH1_FOLLOW_DISTANCE,string"`
-	HISTORICAL_ROOTS_LIMIT                     uint64 `json:"HISTORICAL_ROOTS_LIMIT,string"`
-	HYSTERESIS_DOWNWARD_MULTIPLIER             uint64 `json:"HYSTERESIS_DOWNWARD_MULTIPLIER,string"`
-	HYSTERESIS_QUOTIENT                        uint64 `json:"HYSTERESIS_QUOTIENT,string"`
-	HYSTERESIS_UPWARD_MULTIPLIER               uint64 `json:"HYSTERESIS_UPWARD_MULTIPLIER,string"`
-	INACTIVITY_PENALTY_QUOTIENT                uint64 `json:"INACTIVITY_PENALTY_QUOTIENT,string"`
-	INACTIVITY_PENALTY_QUOTIENT_ALTAIR         uint64 `json:"INACTIVITY_PENALTY_QUOTIENT_ALTAIR,string"`
-	INACTIVITY_PENALTY_QUOTIENT_BELLATRIX      uint64 `json:"INACTIVITY_PENALTY_QUOTIENT_BELLATRIX,string"`
-	INACTIVITY_SCORE_BIAS                      uint64 `json:"INACTIVITY_SCORE_BIAS,string"`
-	INACTIVITY_SCORE_RECOVERY_RATE             uint64 `json:"INACTIVITY_SCORE_RECOVERY_RATE,string"`
-	MAX_ATTESTATIONS                           uint64 `json:"MAX_ATTESTATIONS,string"`
-	MAX_ATTESTER_SLASHINGS                     uint64 `json:"MAX_ATTESTER_SLASHINGS,string"`
-	MAX_BYTES_PER_TRANSACTION                  uint64 `json:"MAX_BYTES_PER_TRANSACTION,string"`
-	MAX_COMMITTEES_PER_SLOT                    uint64 `json:"MAX_COMMITTEES_PER_SLOT,string"`
-	MAX_DEPOSITS                               uint64 `json:"MAX_DEPOSITS,string"`
-	MAX_EXTRA_DATA_BYTES                       uint64 `json:"MAX_EXTRA_DATA_BYTES,string"`
-	MAX_PROPOSER_SLASHINGS                     uint64 `json:"MAX_PROPOSER_SLASHINGS,string"`
-	MAX_TRANSACTIONS_PER_PAYLOAD               uint64 `json:"MAX_TRANSACTIONS_PER_PAYLOAD,string"`
-	MAX_VALIDATORS_PER_COMMITTEE               uint64 `json:"MAX_VALIDATORS_PER_COMMITTEE,string"`
-	MAX_VOLUNTARY_EXITS                        uint64 `json:"MAX_VOLUNTARY_EXITS,string"`
-	MIN_GENESIS_ACTIVE_VALIDATOR_COUNT         uint64 `json:"MIN_GENESIS_ACTIVE_VALIDATOR_COUNT,string"`
-	MIN_PER_EPOCH_CHURN_LIMIT                  uint64 `json:"MIN_PER_EPOCH_CHURN_LIMIT,string"`
-	MIN_SLASHING_PENALTY_QUOTIENT              uint64 `json:"MIN_SLASHING_PENALTY_QUOTIENT,string"`
-	MIN_SLASHING_PENALTY_QUOTIENT_ALTAIR       uint64 `json:"MIN_SLASHING_PENALTY_QUOTIENT_ALTAIR,string"`
-	MIN_SLASHING_PENALTY_QUOTIENT_BELLATRIX    uint64 `json:"MIN_SLASHING_PENALTY_QUOTIENT_BELLATRIX,string"`
-	MIN_SYNC_COMMITTEE_PARTICIPANTS            uint64 `json:"MIN_SYNC_COMMITTEE_PARTICIPANTS,string"`
-	PROPORTIONAL_SLASHING_MULTIPLIER           uint64 `json:"PROPORTIONAL_SLASHING_MULTIPLIER,string"`
-	PROPORTIONAL_SLASHING_MULTIPLIER_ALTAIR    uint64 `json:"PROPORTIONAL_SLASHING_MULTIPLIER_ALTAIR,string"`
-	PROPORTIONAL_SLASHING_MULTIPLIER_BELLATRIX uint64 `json:"PROPORTIONAL_SLASHING_MULTIPLIER_BELLATRIX,string"`
-	PROPOSER_REWARD_QUOTIENT                   uint64 `json:"PROPOSER_REWARD_QUOTIENT,string"`
-	PROPOSER_SCORE_BOOST                       uint64 `json:"PROPOSER_SCORE_BOOST,string"`
-	SAFE_SLOTS_TO_UPDATE_JUSTIFIED             uint64 `json:"SAFE_SLOTS_TO_UPDATE_JUSTIFIED,string"`
-	SECONDS_PER_ETH1_BLOCK                     uint64 `json:"SECONDS_PER_ETH1_BLOCK,string"`
-	SHUFFLE_ROUND_COUNT                        uint8  `json:"SHUFFLE_ROUND_COUNT,string"`
-	SYNC_COMMITTEE_SIZE                        uint64 `json:"SYNC_COMMITTEE_SIZE,string"`
-	TARGET_COMMITTEE_SIZE                      uint64 `json:"TARGET_COMMITTEE_SIZE,string"`
-	VALIDATOR_REGISTRY_LIMIT                   uint64 `json:"VALIDATOR_REGISTRY_LIMIT,string"`
-	WHISTLEBLOWER_REWARD_QUOTIENT              uint64 `json:"WHISTLEBLOWER_REWARD_QUOTIENT,string"`
+	BASE_REWARD_FACTOR                         view.Uint64View `json:"BASE_REWARD_FACTOR,string"`
+	BYTES_PER_LOGS_BLOOM                       view.Uint64View `json:"BYTES_PER_LOGS_BLOOM,string"`
+	CHURN_LIMIT_QUOTIENT                       view.Uint64View `json:"CHURN_LIMIT_QUOTIENT,string"`
+	DEPOSIT_CHAIN_ID                           view.Uint64View `json:"DEPOSIT_CHAIN_ID,string"`
+	DEPOSIT_NETWORK_ID                         view.Uint64View `json:"DEPOSIT_NETWORK_ID,string"`
+	ETH1_FOLLOW_DISTANCE                       view.Uint64View `json:"ETH1_FOLLOW_DISTANCE,string"`
+	HISTORICAL_ROOTS_LIMIT                     view.Uint64View `json:"HISTORICAL_ROOTS_LIMIT,string"`
+	HYSTERESIS_DOWNWARD_MULTIPLIER             view.Uint64View `json:"HYSTERESIS_DOWNWARD_MULTIPLIER,string"`
+	HYSTERESIS_QUOTIENT                        view.Uint64View `json:"HYSTERESIS_QUOTIENT,string"`
+	HYSTERESIS_UPWARD_MULTIPLIER               view.Uint64View `json:"HYSTERESIS_UPWARD_MULTIPLIER,string"`
+	INACTIVITY_PENALTY_QUOTIENT                view.Uint64View `json:"INACTIVITY_PENALTY_QUOTIENT,string"`
+	INACTIVITY_PENALTY_QUOTIENT_ALTAIR         view.Uint64View `json:"INACTIVITY_PENALTY_QUOTIENT_ALTAIR,string"`
+	INACTIVITY_PENALTY_QUOTIENT_BELLATRIX      view.Uint64View `json:"INACTIVITY_PENALTY_QUOTIENT_BELLATRIX,string"`
+	INACTIVITY_SCORE_BIAS                      view.Uint64View `json:"INACTIVITY_SCORE_BIAS,string"`
+	INACTIVITY_SCORE_RECOVERY_RATE             view.Uint64View `json:"INACTIVITY_SCORE_RECOVERY_RATE,string"`
+	MAX_ATTESTATIONS                           view.Uint64View `json:"MAX_ATTESTATIONS,string"`
+	MAX_ATTESTER_SLASHINGS                     view.Uint64View `json:"MAX_ATTESTER_SLASHINGS,string"`
+	MAX_BYTES_PER_TRANSACTION                  view.Uint64View `json:"MAX_BYTES_PER_TRANSACTION,string"`
+	MAX_COMMITTEES_PER_SLOT                    view.Uint64View `json:"MAX_COMMITTEES_PER_SLOT,string"`
+	MAX_DEPOSITS                               view.Uint64View `json:"MAX_DEPOSITS,string"`
+	MAX_EXTRA_DATA_BYTES                       view.Uint64View `json:"MAX_EXTRA_DATA_BYTES,string"`
+	MAX_PROPOSER_SLASHINGS                     view.Uint64View `json:"MAX_PROPOSER_SLASHINGS,string"`
+	MAX_TRANSACTIONS_PER_PAYLOAD               view.Uint64View `json:"MAX_TRANSACTIONS_PER_PAYLOAD,string"`
+	MAX_VALIDATORS_PER_COMMITTEE               view.Uint64View `json:"MAX_VALIDATORS_PER_COMMITTEE,string"`
+	MAX_VOLUNTARY_EXITS                        view.Uint64View `json:"MAX_VOLUNTARY_EXITS,string"`
+	MIN_GENESIS_ACTIVE_VALIDATOR_COUNT         view.Uint64View `json:"MIN_GENESIS_ACTIVE_VALIDATOR_COUNT,string"`
+	MIN_PER_EPOCH_CHURN_LIMIT                  view.Uint64View `json:"MIN_PER_EPOCH_CHURN_LIMIT,string"`
+	MIN_SLASHING_PENALTY_QUOTIENT              view.Uint64View `json:"MIN_SLASHING_PENALTY_QUOTIENT,string"`
+	MIN_SLASHING_PENALTY_QUOTIENT_ALTAIR       view.Uint64View `json:"MIN_SLASHING_PENALTY_QUOTIENT_ALTAIR,string"`
+	MIN_SLASHING_PENALTY_QUOTIENT_BELLATRIX    view.Uint64View `json:"MIN_SLASHING_PENALTY_QUOTIENT_BELLATRIX,string"`
+	MIN_SYNC_COMMITTEE_PARTICIPANTS            view.Uint64View `json:"MIN_SYNC_COMMITTEE_PARTICIPANTS,string"`
+	PROPORTIONAL_SLASHING_MULTIPLIER           view.Uint64View `json:"PROPORTIONAL_SLASHING_MULTIPLIER,string"`
+	PROPORTIONAL_SLASHING_MULTIPLIER_ALTAIR    view.Uint64View `json:"PROPORTIONAL_SLASHING_MULTIPLIER_ALTAIR,string"`
+	PROPORTIONAL_SLASHING_MULTIPLIER_BELLATRIX view.Uint64View `json:"PROPORTIONAL_SLASHING_MULTIPLIER_BELLATRIX,string"`
+	PROPOSER_REWARD_QUOTIENT                   view.Uint64View `json:"PROPOSER_REWARD_QUOTIENT,string"`
+	PROPOSER_SCORE_BOOST                       view.Uint64View `json:"PROPOSER_SCORE_BOOST,string"`
+	SAFE_SLOTS_TO_UPDATE_JUSTIFIED             view.Uint64View `json:"SAFE_SLOTS_TO_UPDATE_JUSTIFIED,string"`
+	SECONDS_PER_ETH1_BLOCK                     view.Uint64View `json:"SECONDS_PER_ETH1_BLOCK,string"`
+	SHUFFLE_ROUND_COUNT                        view.Uint8View  `json:"SHUFFLE_ROUND_COUNT,string"`
+	SYNC_COMMITTEE_SIZE                        view.Uint64View `json:"SYNC_COMMITTEE_SIZE,string"`
+	TARGET_COMMITTEE_SIZE                      view.Uint64View `json:"TARGET_COMMITTEE_SIZE,string"`
+	VALIDATOR_REGISTRY_LIMIT                   view.Uint64View `json:"VALIDATOR_REGISTRY_LIMIT,string"`
+	WHISTLEBLOWER_REWARD_QUOTIENT              view.Uint64View `json:"WHISTLEBLOWER_REWARD_QUOTIENT,string"`
 }
 
 func (s *spec) toSpec() *beaconcommon.Spec {
