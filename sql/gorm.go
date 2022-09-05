@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"context"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -15,4 +17,13 @@ func GormOpen(cfg *Config) (*gorm.DB, error) {
 		postgres.Open(cfg.DSN().String()),
 		config,
 	)
+}
+
+func PingGormDB(ctx context.Context, db *gorm.DB) error {
+	sqlDB, err := db.DB()
+	if err != nil {
+		return err
+	}
+
+	return PingDB(ctx, sqlDB)
 }
