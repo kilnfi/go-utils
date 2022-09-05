@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v0.3.5 (September 5th 2022)
+
+### :dizzy: Features
+
+- feat(sql): add test utilities for sql database
+- feat(docker):  add docker compose for integration tests
+- feat(gorm): allow disabling gorm logger
+- feat(keystore): add HasAccount method
+
+### 🛠️ Bug fixes
+
+- fix(oracle): make error channel in initService non-blocking
+- fix(app): fix init
+
 ## v0.3.4 (July 19th 2022)
 
 ### 🛠️ Bug fixes
