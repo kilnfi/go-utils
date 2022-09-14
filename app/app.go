@@ -30,6 +30,8 @@ var (
 	statusRunning      = "running"
 	statusStopping     = "stopping"
 	statusStopped      = "stopped"
+	statusClosed       = "closed"
+	statusClosing      = "closing"
 )
 
 // An App is a modular application with HTTP server. It allows users to register custom Services
@@ -53,6 +55,7 @@ type App struct {
 
 	services []interface{}
 	toStop   []Runnable
+	toClose  []Closable
 
 	statusMux sync.Mutex
 	status    string
@@ -214,7 +217,7 @@ func (app *App) readycheck(ctx context.Context) error {
 
 // 4. Service Close: `svc.Close() error`
 // Service
-//      - MAY clean its state
+//   - MAY clean its state
 func (app *App) RegisterService(svc interface{}) {
 	// Register Handler and SetLogger on service registration
 	if loggable, ok := svc.(Loggable); ok {
@@ -316,6 +319,9 @@ func (app *App) startServices(ctx context.Context) (err error) {
 
 				return err
 			}
+			if closeable, ok := svc.(Closable); ok {
+				app.toClose = append(app.toClose, closeable)
+			}
 		}
 	}
 
@@ -341,6 +347,26 @@ func (app *App) stopServices(ctx context.Context) error {
 
 	app.logger.Infof("services stopped...")
 	app.setStatus(statusStopped)
+
+	return rErr
+}
+
+func (app *App) closeServices() error {
+	app.logger.Infof("close services...")
+	app.setStatus(statusClosing)
+	var rErr error
+	for i := range app.toClose {
+		if err := app.toClose[len(app.toClose)-i-1].Close(); err != nil && rErr == nil {
+			rErr = err
+		}
+	}
+
+	if rErr != nil {
+		app.logger.WithError(rErr).Errorf("error closing service")
+	}
+
+	app.logger.Infof("services closed...")
+	app.setStatus(statusClosed)
 
 	return rErr
 }
@@ -391,8 +417,14 @@ func (app *App) run() error {
 	if err != nil {
 		_ = app.stopSignalsAndServers(stopCtx)
 		return err
-
 	}
+
+	err = app.closeServices()
+	if err != nil {
+		_ = app.stopSignalsAndServers(stopCtx)
+		return err
+	}
+
 	return app.stopSignalsAndServers(stopCtx)
 }
 
