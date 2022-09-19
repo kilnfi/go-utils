@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.3.5 (September 19th 2022)
+
+### 🛠️ Bug fixes
+
+- fix(app): close services on app stop
+
 ## v0.3.5 (September 5th 2022)
 
 ### :dizzy: Features
