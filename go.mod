@@ -13,7 +13,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1
 	github.com/hashicorp/go-retryablehttp v0.7.1
-	github.com/hashicorp/vault/api v1.7.2
+	github.com/hashicorp/vault/api v1.8.0
 	github.com/hellofresh/health-go/v4 v4.7.0
 	github.com/herumi/bls-eth-go-binary v1.28.1
 	github.com/jackc/pgconn v1.13.0
@@ -86,7 +86,7 @@ require (
 	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hashicorp/vault/sdk v0.5.3 // indirect
+	github.com/hashicorp/vault/sdk v0.6.0 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
 	github.com/holiman/uint256 v1.2.1 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
