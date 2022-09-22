@@ -32,7 +32,7 @@ require (
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
 	github.com/wealdtech/go-eth2-util v1.7.0
-	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.2.0
+	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.3.0
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9
 	gopkg.in/h2non/gock.v1 v1.1.2
