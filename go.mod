@@ -25,7 +25,7 @@ require (
 	github.com/protolambda/zrnt v0.28.0
 	github.com/protolambda/ztyp v0.2.2
 	github.com/sirupsen/logrus v1.9.0
-	github.com/spf13/cobra v1.5.0
+	github.com/spf13/cobra v1.6.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.0
