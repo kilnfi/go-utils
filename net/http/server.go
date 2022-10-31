@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -28,6 +29,8 @@ type ServerConfig struct {
 	IdleTimeout *types.Duration
 
 	MaxHeaderBytes *int
+
+	ConnStateCallback func(net.Conn, http.ConnState)
 }
 
 func (cfg *ServerConfig) SetDefault() *ServerConfig {
@@ -90,6 +93,7 @@ func NewServer(cfg *ServerConfig) (*Server, error) {
 			ReadHeaderTimeout: cfg.ReadHeaderTimeout.Duration,
 			WriteTimeout:      cfg.WriteTimeout.Duration,
 			IdleTimeout:       cfg.IdleTimeout.Duration,
+			ConnState:         cfg.ConnStateCallback,
 		},
 		entrypoint: entrypoint,
 	}
