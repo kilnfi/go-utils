@@ -22,7 +22,7 @@ var forkVersions = map[string]beaconcommon.Version{
 }
 
 var networks = map[string]string{
-	MainnetForkVersion.String(): "mainet",
+	MainnetForkVersion.String(): "mainnet",
 	PraterForkVersion.String():  "prater",
 	SepoliaForkVersion.String(): "sepolia",
 	RopstenForkVersion.String(): "ropsten",
