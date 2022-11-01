@@ -18,6 +18,18 @@ var (
 	statusStopped = "stopped"
 )
 
+type ConnStateCallbackTypeWrapper func(net.Conn, http.ConnState)
+
+func (c ConnStateCallbackTypeWrapper) MarshalJSON() ([]byte, error) {
+	// When the callback is overloaded.
+	if c == nil {
+		return []byte("onConnStateChangeOverloaded"), nil
+	}
+
+	// Otherwise..
+	return []byte("onConnStateChangeDefault"), nil
+}
+
 type ServerConfig struct {
 	Entrypoint *kilnnet.EntrypointConfig
 
@@ -30,7 +42,7 @@ type ServerConfig struct {
 
 	MaxHeaderBytes *int
 
-	ConnStateCallback func(net.Conn, http.ConnState)
+	ConnStateCallback ConnStateCallbackTypeWrapper
 }
 
 func (cfg *ServerConfig) SetDefault() *ServerConfig {
