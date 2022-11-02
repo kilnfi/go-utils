@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -17,6 +18,18 @@ var (
 	statusStopped = "stopped"
 )
 
+type ConnStateCallbackTypeWrapper func(net.Conn, http.ConnState)
+
+func (c ConnStateCallbackTypeWrapper) MarshalJSON() ([]byte, error) {
+	// When the callback is overloaded.
+	if c == nil {
+		return []byte("onConnStateChangeOverloaded"), nil
+	}
+
+	// Otherwise..
+	return []byte("onConnStateChangeDefault"), nil
+}
+
 type ServerConfig struct {
 	Entrypoint *kilnnet.EntrypointConfig
 
@@ -28,6 +41,8 @@ type ServerConfig struct {
 	IdleTimeout *types.Duration
 
 	MaxHeaderBytes *int
+
+	ConnStateCallback ConnStateCallbackTypeWrapper
 }
 
 func (cfg *ServerConfig) SetDefault() *ServerConfig {
@@ -90,6 +105,7 @@ func NewServer(cfg *ServerConfig) (*Server, error) {
 			ReadHeaderTimeout: cfg.ReadHeaderTimeout.Duration,
 			WriteTimeout:      cfg.WriteTimeout.Duration,
 			IdleTimeout:       cfg.IdleTimeout.Duration,
+			ConnState:         cfg.ConnStateCallback,
 		},
 		entrypoint: entrypoint,
 	}
