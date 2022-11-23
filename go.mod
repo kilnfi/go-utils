@@ -37,7 +37,7 @@ require (
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9
 	gopkg.in/h2non/gock.v1 v1.1.2
 	gorm.io/driver/postgres v1.3.9
-	gorm.io/gorm v1.23.9
+	gorm.io/gorm v1.24.2
 )
 
 require (
