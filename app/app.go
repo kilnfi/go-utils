@@ -253,54 +253,37 @@ func (app *App) initServices(ctx context.Context) error {
 	app.setStatus(statusInitializing)
 	app.logger.Infof("initialize services...")
 
-	wg := &sync.WaitGroup{}
-	errors := make(chan error, len(app.services))
+	var err error
 
-	wg.Add(len(app.services))
 	for _, svc := range app.services {
-		go func(svc interface{}) {
-			defer wg.Done()
-
-			// Register checks before starting initialization
-			if check, ok := svc.(Checkable); ok {
-				if err := check.RegisterCheck(app.readiness); err != nil {
-					errors <- err
-					return
-				}
+		// Register checks before starting initialization
+		if check, ok := svc.(Checkable); ok {
+			if err = check.RegisterCheck(app.readiness); err != nil {
+				break
 			}
+		}
 
-			// Register metrics before starting initialization
-			if measure, ok := svc.(Measurable); ok {
-				if err := measure.RegisterMetrics(app.prometheus); err != nil {
-					errors <- err
-					return
-				}
+		// Register metrics before starting initialization
+		if measure, ok := svc.(Measurable); ok {
+			if err = measure.RegisterMetrics(app.prometheus); err != nil {
+				break
 			}
+		}
 
-			if init, ok := svc.(Initializable); ok {
-				err := init.Init(ctx)
-				if err != nil {
-					errors <- err
-					return
-				}
+		if init, ok := svc.(Initializable); ok {
+			err = init.Init(ctx)
+			if err != nil {
+				break
 			}
-		}(svc)
+		}
 	}
 
-	wg.Wait()
-
-	close(errors)
-	var initErr error
-	for err := range errors {
-		initErr = err
-	}
-
-	if initErr != nil {
+	if err != nil {
 		app.setStatus(statusInitErr)
-		app.logger.WithError(initErr).Errorf("error initializing services")
+		app.logger.WithError(err).Errorf("error initializing services")
 	}
 
-	return initErr
+	return err
 }
 
 func (app *App) startServices(ctx context.Context) (err error) {
