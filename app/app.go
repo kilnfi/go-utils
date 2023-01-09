@@ -100,6 +100,12 @@ func New(cfg *Config) (*App, error) {
 	}, nil
 }
 
+func (app *App) SetLogger(logger *logrus.Logger) {
+	app.logger = logger
+	app.server.SetLogger(logger)
+	app.healthServer.SetLogger(logger)
+}
+
 func (app *App) setStatus(status string) {
 	app.statusMux.Lock()
 	app.status = status
