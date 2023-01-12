@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/kilnfi/go-utils/cmd/utils"
-	execclient "github.com/kilnfi/go-utils/ethereum/execution/client"
+	execclient "github.com/kilnfi/go-utils/ethereum/execution/client/jsonrpc"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

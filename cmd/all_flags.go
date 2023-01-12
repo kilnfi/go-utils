@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/kilnfi/go-utils/app"
 	consclienthttp "github.com/kilnfi/go-utils/ethereum/consensus/client/http"
-	execclient "github.com/kilnfi/go-utils/ethereum/execution/client"
+	execclient "github.com/kilnfi/go-utils/ethereum/execution/client/jsonrpc"
 	"github.com/kilnfi/go-utils/hashicorp"
 	gethkeystore "github.com/kilnfi/go-utils/keystore/geth"
 	"github.com/kilnfi/go-utils/sql"

@@ -1,4 +1,4 @@
-package client
+package jsonrpc
 
 import (
 	cmdutils "github.com/kilnfi/go-utils/cmd/utils"
