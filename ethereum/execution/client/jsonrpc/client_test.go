@@ -1,10 +1,11 @@
 //go:build !integration
 // +build !integration
 
-package client
+package jsonrpc
 
 import (
 	"context"
+	"embed"
 	"math/big"
 	"testing"
 
@@ -12,12 +13,18 @@ import (
 	gethbind "github.com/ethereum/go-ethereum/accounts/abi/bind"
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	httptestutils "github.com/kilnfi/go-utils/net/http/testutils"
 	jsonrpchttp "github.com/kilnfi/go-utils/net/jsonrpc/http"
+)
+
+var (
+	//go:embed testdata
+	testdataFS embed.FS
 )
 
 func TestClientImplementsGetBindingInterface(t *testing.T) {
@@ -36,6 +43,9 @@ func TestClient(t *testing.T) {
 
 	t.Run("BlockNumber", func(t *testing.T) { testBlockNumber(t, c, mockCli) })
 	t.Run("HeaderByNumber", func(t *testing.T) { testHeaderByNumber(t, c, mockCli) })
+	t.Run("HeaderByNumber_Finalized", func(t *testing.T) { testBlockByNumberFinalized(t, c, mockCli) })
+	t.Run("BlockByNumber", func(t *testing.T) { testBlockByNumber(t, c, mockCli) })
+	t.Run("BlockByHash", func(t *testing.T) { testBlockByHash(t, c, mockCli) })
 	t.Run("CallContract", func(t *testing.T) { testCallContract(t, c, mockCli) })
 	t.Run("NonceAt", func(t *testing.T) { testNonceAt(t, c, mockCli) })
 	t.Run("PendingNonceAt", func(t *testing.T) { testPendingNonceAt(t, c, mockCli) })
@@ -58,6 +68,126 @@ func testBlockNumber(t *testing.T, c *Client, mockCli *httptestutils.MockSender)
 
 	require.NoError(t, err)
 	assert.Equal(t, uint64(32), blockNumber)
+}
+
+func testBlockByNumberFinalized(t *testing.T, c *Client, mockCli *httptestutils.MockSender) {
+	res, _ := testdataFS.ReadFile("testdata/eth_getBlockByNumber_finalized_true.json")
+	require.NotEmpty(t, res, "response should not be empty (check typo in testdata filename)")
+
+	req := httptestutils.NewGockRequest()
+	req.Post("/").
+		JSON([]byte(`{"jsonrpc":"","method":"eth_getBlockByNumber","params":["finalized",true],"id":null}`)).
+		Reply(200).
+		JSON(res)
+
+	mockCli.EXPECT().Gock(req)
+
+	block, err := c.BlockByNumber(context.Background(), big.NewInt(int64(rpc.FinalizedBlockNumber)))
+
+	require.NoError(t, err)
+	assert.Equal(
+		t,
+		&gethtypes.Header{
+			ParentHash:  gethcommon.HexToHash("0x6019a4b3e4e3ba7b7b43d28d68492f99226b86e7dff0c607a16ef4d16a617503"),
+			UncleHash:   gethcommon.HexToHash("0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"),
+			Coinbase:    gethcommon.HexToAddress("0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5"),
+			Root:        gethcommon.HexToHash("0x4a4e5f11b8e837adb24fb764ab93f33ed21efa279df4fe59b5bed3c3885e9fae"),
+			TxHash:      gethcommon.HexToHash("0x5cb8acbd8a0d2f3c489e47d8267c86a718203da8a5a34f0511918c13cbb14c1b"),
+			ReceiptHash: gethcommon.HexToHash("0x081119bc627ccedade0b6321984146672ad1a15b0769b08f7a91ea22474c7bd9"),
+			Bloom:       gethtypes.BytesToBloom(gethcommon.FromHex("0x1fbb5f53e8e63cedffe45fd8bf1217fdee15d39bbebf275136afb8ffb99fdd9b92556ffb2ceeb1345a3bf1dd730ebfc6bf4c814119e6faaef2f9fa9b50ffe8fd838eb2bed773592efb0ffc7efd142fe37fe65117f5f4f7bb2f037671a4ff52d443a7044a1be25ec1fb1b13a9aabf6afdd278f4bf4abda64e3293cb9480f97d11c9558ded275cdf8ed5ef7f43398e9fb5fe4e2e0d79257cecebf95bd36e99a8f7bbdab5323febe6baceb1dfdda71cbe21dfbcc6a3feee6702fd85a6bd3ee9f8dc757ca4bacdf3a47ef119c3d95feb5d2f65acffdb9effa17ebb5fdb1b3afe64dfd8fcf3bfa8787f882e660d33cfe7fb9220ef6226efd5dffafcc7daa3b6967faf")),
+			Difficulty:  big.NewInt(12795344477503252),
+			Number:      big.NewInt(14082406),
+			GasLimit:    29999972,
+			GasUsed:     29984188,
+			Time:        uint64(1643215331),
+			Extra:       gethcommon.FromHex("0x6e616e6f706f6f6c2e6f7267"),
+			MixDigest:   gethcommon.HexToHash("0x274264e3a69256c43beb4632b6bf8ac2de6534dd6c4fb09dad1a0541eb8ed356"),
+			Nonce:       gethtypes.EncodeNonce(3448329947143578346),
+			BaseFee:     big.NewInt(121064488104),
+		},
+		block.Header(),
+	)
+	assert.Equal(t, 277, block.Transactions().Len())
+}
+
+func testBlockByNumber(t *testing.T, c *Client, mockCli *httptestutils.MockSender) {
+	res, _ := testdataFS.ReadFile("testdata/eth_getBlockByNumber_0xd6e166_true.json")
+	require.NotEmpty(t, res, "response should not be empty (check typo in testdata filename)")
+
+	req := httptestutils.NewGockRequest()
+	req.Post("/").
+		JSON([]byte(`{"jsonrpc":"","method":"eth_getBlockByNumber","params":["0xd6e166",true],"id":null}`)).
+		Reply(200).
+		JSON(res)
+
+	mockCli.EXPECT().Gock(req)
+
+	block, err := c.BlockByNumber(context.Background(), big.NewInt(14082406))
+
+	require.NoError(t, err)
+	assert.Equal(
+		t,
+		&gethtypes.Header{
+			ParentHash:  gethcommon.HexToHash("0x6019a4b3e4e3ba7b7b43d28d68492f99226b86e7dff0c607a16ef4d16a617503"),
+			UncleHash:   gethcommon.HexToHash("0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"),
+			Coinbase:    gethcommon.HexToAddress("0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5"),
+			Root:        gethcommon.HexToHash("0x4a4e5f11b8e837adb24fb764ab93f33ed21efa279df4fe59b5bed3c3885e9fae"),
+			TxHash:      gethcommon.HexToHash("0x5cb8acbd8a0d2f3c489e47d8267c86a718203da8a5a34f0511918c13cbb14c1b"),
+			ReceiptHash: gethcommon.HexToHash("0x081119bc627ccedade0b6321984146672ad1a15b0769b08f7a91ea22474c7bd9"),
+			Bloom:       gethtypes.BytesToBloom(gethcommon.FromHex("0x1fbb5f53e8e63cedffe45fd8bf1217fdee15d39bbebf275136afb8ffb99fdd9b92556ffb2ceeb1345a3bf1dd730ebfc6bf4c814119e6faaef2f9fa9b50ffe8fd838eb2bed773592efb0ffc7efd142fe37fe65117f5f4f7bb2f037671a4ff52d443a7044a1be25ec1fb1b13a9aabf6afdd278f4bf4abda64e3293cb9480f97d11c9558ded275cdf8ed5ef7f43398e9fb5fe4e2e0d79257cecebf95bd36e99a8f7bbdab5323febe6baceb1dfdda71cbe21dfbcc6a3feee6702fd85a6bd3ee9f8dc757ca4bacdf3a47ef119c3d95feb5d2f65acffdb9effa17ebb5fdb1b3afe64dfd8fcf3bfa8787f882e660d33cfe7fb9220ef6226efd5dffafcc7daa3b6967faf")),
+			Difficulty:  big.NewInt(12795344477503252),
+			Number:      big.NewInt(14082406),
+			GasLimit:    29999972,
+			GasUsed:     29984188,
+			Time:        uint64(1643215331),
+			Extra:       gethcommon.FromHex("0x6e616e6f706f6f6c2e6f7267"),
+			MixDigest:   gethcommon.HexToHash("0x274264e3a69256c43beb4632b6bf8ac2de6534dd6c4fb09dad1a0541eb8ed356"),
+			Nonce:       gethtypes.EncodeNonce(3448329947143578346),
+			BaseFee:     big.NewInt(121064488104),
+		},
+		block.Header(),
+	)
+	assert.Equal(t, 277, block.Transactions().Len())
+}
+
+func testBlockByHash(t *testing.T, c *Client, mockCli *httptestutils.MockSender) {
+	res, _ := testdataFS.ReadFile("testdata/eth_getBlockByHash_0x0fb6d5609c9edab75bf587ea7449e6e6940d6e3df1992a1bd96ca8b74ffd16fc_true.json")
+	require.NotEmpty(t, res, "response should not be empty (check typo in testdata filename)")
+
+	req := httptestutils.NewGockRequest()
+	req.Post("/").
+		JSON([]byte(`{"jsonrpc":"","method":"eth_getBlockByHash","params":["0x0fb6d5609c9edab75bf587ea7449e6e6940d6e3df1992a1bd96ca8b74ffd16fc",true],"id":null}`)).
+		Reply(200).
+		JSON(res)
+
+	mockCli.EXPECT().Gock(req)
+
+	block, err := c.BlockByHash(context.Background(), gethcommon.HexToHash("0x0fb6d5609c9edab75bf587ea7449e6e6940d6e3df1992a1bd96ca8b74ffd16fc"))
+
+	require.NoError(t, err)
+	assert.Equal(
+		t,
+		&gethtypes.Header{
+			ParentHash:  gethcommon.HexToHash("0x6019a4b3e4e3ba7b7b43d28d68492f99226b86e7dff0c607a16ef4d16a617503"),
+			UncleHash:   gethcommon.HexToHash("0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"),
+			Coinbase:    gethcommon.HexToAddress("0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5"),
+			Root:        gethcommon.HexToHash("0x4a4e5f11b8e837adb24fb764ab93f33ed21efa279df4fe59b5bed3c3885e9fae"),
+			TxHash:      gethcommon.HexToHash("0x5cb8acbd8a0d2f3c489e47d8267c86a718203da8a5a34f0511918c13cbb14c1b"),
+			ReceiptHash: gethcommon.HexToHash("0x081119bc627ccedade0b6321984146672ad1a15b0769b08f7a91ea22474c7bd9"),
+			Bloom:       gethtypes.BytesToBloom(gethcommon.FromHex("0x1fbb5f53e8e63cedffe45fd8bf1217fdee15d39bbebf275136afb8ffb99fdd9b92556ffb2ceeb1345a3bf1dd730ebfc6bf4c814119e6faaef2f9fa9b50ffe8fd838eb2bed773592efb0ffc7efd142fe37fe65117f5f4f7bb2f037671a4ff52d443a7044a1be25ec1fb1b13a9aabf6afdd278f4bf4abda64e3293cb9480f97d11c9558ded275cdf8ed5ef7f43398e9fb5fe4e2e0d79257cecebf95bd36e99a8f7bbdab5323febe6baceb1dfdda71cbe21dfbcc6a3feee6702fd85a6bd3ee9f8dc757ca4bacdf3a47ef119c3d95feb5d2f65acffdb9effa17ebb5fdb1b3afe64dfd8fcf3bfa8787f882e660d33cfe7fb9220ef6226efd5dffafcc7daa3b6967faf")),
+			Difficulty:  big.NewInt(12795344477503252),
+			Number:      big.NewInt(14082406),
+			GasLimit:    29999972,
+			GasUsed:     29984188,
+			Time:        uint64(1643215331),
+			Extra:       gethcommon.FromHex("0x6e616e6f706f6f6c2e6f7267"),
+			MixDigest:   gethcommon.HexToHash("0x274264e3a69256c43beb4632b6bf8ac2de6534dd6c4fb09dad1a0541eb8ed356"),
+			Nonce:       gethtypes.EncodeNonce(3448329947143578346),
+			BaseFee:     big.NewInt(121064488104),
+		},
+		block.Header(),
+	)
+	assert.Equal(t, 277, block.Transactions().Len())
 }
 
 func testHeaderByNumber(t *testing.T, c *Client, mockCli *httptestutils.MockSender) {
