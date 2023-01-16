@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 	kilndocker "github.com/kilnfi/go-utils/docker"
 	kilnsql "github.com/kilnfi/go-utils/sql"
 	"github.com/stretchr/testify/assert"

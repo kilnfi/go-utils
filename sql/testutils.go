@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 )
 
 // Create a temporary DB scoped to the test scenario and returns the config to connect to it
