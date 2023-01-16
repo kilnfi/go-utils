@@ -10,7 +10,7 @@ import (
 	dockertypes "github.com/docker/docker/api/types"
 	dockercontainer "github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
-	_ "github.com/jackc/pgx/v4/stdlib" // imported so pgx sql driver is registered
+	_ "github.com/jackc/pgx/v5/stdlib" // imported so pgx sql driver is registered
 	kilnsql "github.com/kilnfi/go-utils/sql"
 )
 
