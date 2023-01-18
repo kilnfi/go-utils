@@ -65,7 +65,7 @@ func (c *Client) ChainID(ctx context.Context) (*big.Int, error) {
 // finalizedBlock, err := s.core.ElClient().BlockByNumber(ctx, big.NewInt(int64(rpc.finalizedBlockNumber)))
 func (c *Client) BlockByNumber(ctx context.Context, number *big.Int) (*types.Block, error) {
 	finalized := big.NewInt(int64(rpc.FinalizedBlockNumber))
-	if number.Cmp(finalized) == 0 {
+	if number != nil && number.Cmp(finalized) == 0 {
 		var raw json.RawMessage
 		if err := c.rpcclient.CallContext(ctx, &raw, "eth_getBlockByNumber", "finalized", true); err != nil {
 			return nil, err
