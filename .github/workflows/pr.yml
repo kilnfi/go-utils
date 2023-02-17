@@ -12,15 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-18.04"]
+        os: ["ubuntu-20.04"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: 'Setup go ${{ env.GO_VERSION }}'
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: 'Check out project files'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
       - name: 'Run unit tests and generage HTML coverage report'
@@ -31,13 +31,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-18.04"]
+        os: ["ubuntu-20.04"]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
       - name: 'Pull postgres 14.4 docker image so it is available for integeration test'
@@ -49,14 +49,14 @@ jobs:
 
   lint:
       name: 'Linting tests'
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-20.04
       steps:
         - name: 'Setup go ${{ env.GO_VERSION }}'
-          uses: actions/setup-go@v1
+          uses: actions/setup-go@v3
           with:
             go-version: ${{ env.GO_VERSION }}
         - name: 'Check out project files'
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
           with:
             submodules: false
         - name: 'Run linting checks'

@@ -169,14 +169,6 @@ func (opt *Config) ToTLSConfig() (*tls.Config, error) {
 		}
 	}
 
-	var ok bool
-	if cfg.MinVersion, ok = opt.TLSMinVersion(); ok {
-		cfg.PreferServerCipherSuites = true
-	}
-	if cfg.MaxVersion, ok = opt.TLSMaxVersion(); ok {
-		cfg.PreferServerCipherSuites = true
-	}
-
 	// Set the list of CipherSuites if set in the config
 	if len(opt.CipherSuites) > 0 {
 		for _, cipher := range opt.CipherSuites {
