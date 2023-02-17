@@ -2,12 +2,10 @@ package geth
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"math/big"
 	"sync"
 
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/kilnfi/go-utils/ethereum/execution/client"
@@ -55,27 +53,4 @@ func (c *Client) ChainID(ctx context.Context) (*big.Int, error) {
 	}
 	c.chainID = id
 	return id, nil
-}
-
-// While the last release of go-ethereum can't make a call to eth_getBlockByNumber
-// with finalized arg, we hook into the method to make this custom call.
-// Once go-ethereum will release this:
-// https://github.com/ethereum/go-ethereum/blob/c1aa1db69e74c71f251fc83cf7c120b4d0222728/ethclient/gethclient/gethclient.go#L189
-// then we could simply remove this condition
-// finalizedBlock, err := s.core.ElClient().BlockByNumber(ctx, big.NewInt(int64(rpc.finalizedBlockNumber)))
-func (c *Client) BlockByNumber(ctx context.Context, number *big.Int) (*types.Block, error) {
-	finalized := big.NewInt(int64(rpc.FinalizedBlockNumber))
-	if number != nil && number.Cmp(finalized) == 0 {
-		var raw json.RawMessage
-		if err := c.rpcclient.CallContext(ctx, &raw, "eth_getBlockByNumber", "finalized", true); err != nil {
-			return nil, err
-		}
-		var head *types.Header
-		if err := json.Unmarshal(raw, &head); err != nil {
-			return nil, err
-		}
-		return types.NewBlockWithHeader(head), nil // this block object is incomplete but enough for current usage.
-	}
-
-	return c.Client.BlockByNumber(ctx, number)
 }
