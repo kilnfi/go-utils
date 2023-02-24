@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## v0.4.0 (February 24th 2023)
+
+### :dizzy: Features
+
+- [ethereum] create interface for eth EL client
+- [ethereum] add consensus client mock
+- [app] add SetLogger method to app
+- [app] add option to configure custom connstate callback
+
+### 🛠️ Bug fixes
+
+- [app] make app services init sequential
+- [ethereum] handle nil case on geth.BlockByNumber
+- [ethereum] typo in mainnet constant
+- [app] update marshal json implementation for connstate callback
+
+### 🕹️ Others
+
+- [chore] update deps (geth 1.11.2, pgx v5)
+
+
 ## v0.3.5 (September 19th 2022)
 
 ### 🛠️ Bug fixes
