@@ -10,6 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	types "github.com/kilnfi/go-utils/ethereum/consensus/types"
+	bellatrix "github.com/protolambda/zrnt/eth2/beacon/bellatrix"
 	common "github.com/protolambda/zrnt/eth2/beacon/common"
 	phase0 "github.com/protolambda/zrnt/eth2/beacon/phase0"
 )
@@ -68,10 +69,10 @@ func (mr *MockClientMockRecorder) GetAttesterSlashings(ctx interface{}) *gomock.
 }
 
 // GetBlock mocks base method.
-func (m *MockClient) GetBlock(ctx context.Context, blockID string) (*phase0.SignedBeaconBlock, error) {
+func (m *MockClient) GetBlock(ctx context.Context, blockID string) (*bellatrix.SignedBeaconBlock, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBlock", ctx, blockID)
-	ret0, _ := ret[0].(*phase0.SignedBeaconBlock)
+	ret0, _ := ret[0].(*bellatrix.SignedBeaconBlock)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -391,10 +392,10 @@ func (mr *MockBeaconClientMockRecorder) GetAttesterSlashings(ctx interface{}) *g
 }
 
 // GetBlock mocks base method.
-func (m *MockBeaconClient) GetBlock(ctx context.Context, blockID string) (*phase0.SignedBeaconBlock, error) {
+func (m *MockBeaconClient) GetBlock(ctx context.Context, blockID string) (*bellatrix.SignedBeaconBlock, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBlock", ctx, blockID)
-	ret0, _ := ret[0].(*phase0.SignedBeaconBlock)
+	ret0, _ := ret[0].(*bellatrix.SignedBeaconBlock)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

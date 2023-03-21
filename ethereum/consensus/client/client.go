@@ -5,6 +5,7 @@ import (
 
 	"github.com/kilnfi/go-utils/ethereum/consensus/types"
 
+	"github.com/protolambda/zrnt/eth2/beacon/bellatrix"
 	beaconcommon "github.com/protolambda/zrnt/eth2/beacon/common"
 	beaconphase0 "github.com/protolambda/zrnt/eth2/beacon/phase0"
 )
@@ -80,7 +81,7 @@ type BeaconClient interface {
 	GetBlockHeader(ctx context.Context, blockID string) (*types.BeaconBlockHeader, error)
 
 	// GetBlock returns block details for given block id.
-	GetBlock(ctx context.Context, blockID string) (*beaconphase0.SignedBeaconBlock, error)
+	GetBlock(ctx context.Context, blockID string) (*bellatrix.SignedBeaconBlock, error)
 
 	// GetBlockRoot returns hashTreeRoot of block
 	GetBlockRoot(ctx context.Context, blockID string) (*beaconcommon.Root, error)
