@@ -11,6 +11,7 @@ import (
 	dockercontainer "github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
 	_ "github.com/jackc/pgx/v5/stdlib" // imported so pgx sql driver is registered
+	gethclient "github.com/kilnfi/go-utils/ethereum/execution/client/geth"
 	kilnsql "github.com/kilnfi/go-utils/sql"
 )
 
@@ -182,6 +183,68 @@ func NewTreafikServiceConfig(opts *TraefikServiceOpts) (*ServiceConfig, error) {
 
 		if resp.StatusCode != http.StatusOK {
 			return fmt.Errorf("invalid status: %v", resp.Status)
+		}
+
+		return nil
+	}
+
+	return &ServiceConfig{
+		Container: containerCfg,
+		Host:      hostCfg,
+		IsReady:   isReady,
+	}, nil
+}
+
+type FoundryServiceOpts struct {
+	Port, Entrypoint, Image string
+	Env                     []string
+}
+
+func (opts *FoundryServiceOpts) SetDefault() *FoundryServiceOpts {
+	if opts.Port == "" {
+		opts.Port = "8545"
+	}
+	if opts.Entrypoint == "" {
+		opts.Entrypoint = "anvil"
+	}
+	if len(opts.Env) == 0 {
+		opts.Env = []string{
+			"ANVIL_PORT=8545",
+			"ANVIL_IP_ADDR=0.0.0.0",
+		}
+	}
+
+	opts.Image = "ghcr.io/foundry-rs/foundry:latest"
+
+	return opts
+}
+
+func NewFoundryServiceConfig(opts *FoundryServiceOpts) (*ServiceConfig, error) {
+	ports, portBindings, err := nat.ParsePortSpecs([]string{
+		fmt.Sprintf("%v:8545", opts.Port),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	hostCfg := &dockercontainer.HostConfig{PortBindings: portBindings}
+	containerCfg := &dockercontainer.Config{
+		Image:        opts.Image,
+		ExposedPorts: ports,
+		Env:          opts.Env,
+		Entrypoint:   []string{opts.Entrypoint},
+	}
+
+	isReady := func(ctx context.Context, container *dockertypes.ContainerJSON) error {
+		clt := gethclient.NewClient(fmt.Sprintf("http://127.0.0.1:%v", opts.Port))
+		err := clt.Init(ctx)
+		if err != nil {
+			return err
+		}
+
+		_, err = clt.BlockNumber(ctx)
+		if err != nil {
+			return err
 		}
 
 		return nil

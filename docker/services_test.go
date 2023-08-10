@@ -55,3 +55,10 @@ func TestTraefikService(t *testing.T) {
 
 	testService(t, "traefik", svcCfg)
 }
+
+func TestFoundryService(t *testing.T) {
+	svcCfg, err := NewFoundryServiceConfig(new(FoundryServiceOpts).SetDefault())
+	require.NoError(t, err)
+
+	testService(t, "foundry", svcCfg)
+}
