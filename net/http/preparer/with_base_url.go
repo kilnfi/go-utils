@@ -63,7 +63,7 @@ func OverrideURL(dst, src *url.URL) {
 	}
 
 	if src.Path != "" {
-		dst.Path = path.Join(dst.Path, src.Path)
+		dst.Path = path.Join(src.Path, dst.Path)
 	}
 
 	if src.RawPath != "" {
