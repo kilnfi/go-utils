@@ -174,17 +174,17 @@ func (c *Compose) removeNetwork(ctx context.Context, ntwrk *network) error {
 
 type volume struct {
 	name string
-	cfg  dockervolume.VolumeCreateBody
+	cfg  dockervolume.Volume
 
 	err error
 }
 
-func (c *Compose) RegisterVolume(name string, cfg dockervolume.VolumeCreateBody) {
+func (c *Compose) RegisterVolume(name string, cfg *dockervolume.Volume) {
 	name = c.name(name)
 	cfg.Name = name
 	c.volumes = append(c.volumes, &volume{
 		name: name,
-		cfg:  cfg,
+		cfg:  *cfg,
 	})
 }
 
@@ -202,7 +202,7 @@ func (c *Compose) createVolume(ctx context.Context, vol *volume) error {
 	logger := c.logger.WithField("volume.name", vol.name)
 
 	logger.Infof("create volume...")
-	_, err := c.dockerc.VolumeCreate(ctx, vol.cfg)
+	_, err := c.dockerc.VolumeCreate(ctx, dockervolume.CreateOptions{})
 	if err != nil {
 		vol.err = err
 		logger.WithError(err).Infof("failed to create volume...")
@@ -463,7 +463,7 @@ func (c *Compose) stopContainer(ctx context.Context, svc *service) error {
 		err := c.dockerc.ContainerStop(
 			ctx,
 			svc.id,
-			nil,
+			dockercontainer.StopOptions{},
 		)
 		if err != nil {
 			svc.err = err
