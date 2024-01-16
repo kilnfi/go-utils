@@ -11,6 +11,7 @@ var (
 	PraterForkVersion  = beaconcommon.Version{0x00, 0x00, 0x10, 0x20}
 	SepoliaForkVersion = beaconcommon.Version{0x90, 0x00, 0x00, 0x69}
 	RopstenForkVersion = beaconcommon.Version{0x80, 0x00, 0x00, 0x69}
+	HoleskyForkVersion = beaconcommon.Version{0x01, 0x01, 0x70, 0x00}
 )
 
 var forkVersions = map[string]beaconcommon.Version{
@@ -19,6 +20,7 @@ var forkVersions = map[string]beaconcommon.Version{
 	"goerli":  PraterForkVersion, // we add goerli to facilitate correspondance with exec layer
 	"sepolia": SepoliaForkVersion,
 	"ropsten": RopstenForkVersion,
+	"holesky": HoleskyForkVersion,
 }
 
 var networks = map[string]string{
@@ -26,6 +28,7 @@ var networks = map[string]string{
 	PraterForkVersion.String():  "prater",
 	SepoliaForkVersion.String(): "sepolia",
 	RopstenForkVersion.String(): "ropsten",
+	HoleskyForkVersion.String(): "holesky",
 }
 
 func ForkVersion(network string) (beaconcommon.Version, error) {

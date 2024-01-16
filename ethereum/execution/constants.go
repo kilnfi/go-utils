@@ -7,6 +7,7 @@ var (
 	RopstenChainID = "3"
 	GoerliChainID  = "5"
 	SepoliaChainID = "11155111"
+	HoleskyChainID = "17000"
 )
 
 var chainIds = map[string]string{
@@ -15,6 +16,7 @@ var chainIds = map[string]string{
 	"goerli":  GoerliChainID,
 	"sepolia": SepoliaChainID,
 	"ropsten": RopstenChainID,
+	"holesky": HoleskyChainID,
 }
 
 var networks = map[string]string{
@@ -22,6 +24,7 @@ var networks = map[string]string{
 	GoerliChainID:  "goerli",
 	SepoliaChainID: "sepolia",
 	RopstenChainID: "ropsten",
+	HoleskyChainID: "holesky",
 }
 
 func ChainID(network string) (string, error) {
